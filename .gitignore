@@ -99,8 +99,9 @@ InitTestScene*.unity*
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
 
 #Project
-/[프로젝트 이름]/Library/*
-/[프로젝트 이름]/Logs/*
-/[프로젝트 이름]/obj/*
-/[프로젝트 이름]/Packages/*
-/[프로젝트 이름]/UserSettings/*
+/ProjectB/Library/*
+/ProjectB/Logs/*
+/ProjectB/obj/*
+/[ProjectB/Packages/*
+/ProjectB/UserSettings/*
+/ProjectB/Temp/*
