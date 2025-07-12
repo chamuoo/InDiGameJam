@@ -14,7 +14,7 @@ public class Fire_Macaron : MonoBehaviour
     SpriteRenderer spriteRenderer;
     [SerializeField] GameObject macaron_Boom;
     [SerializeField] Sprite[] macaronSprites;
-    public float damage = 10f;
+    public int damage = 10;
     bool isBoom = false;
 
     public void SetDirection()

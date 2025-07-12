@@ -55,7 +55,9 @@ public class Weapon : MonoBehaviour
         Fire_Hardtack hardtackMethod = bullet.GetComponent<Fire_Hardtack>();
         print(player.targetPos);
         hardtackMethod.targetDirection = player.targetPos;
-        // 사운드, 이펙트 등을 여기에 추가 
+        // 사운드, 이펙트 등을 여기에 추가
+        // 
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[6]);
     }
 
     // 일정 시간마다 발사하는 루틴

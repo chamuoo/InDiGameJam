@@ -10,7 +10,7 @@ public class Fire_Baguette : MonoBehaviour
     Rigidbody2D rb;
     SpriteRenderer spriteRenderer;
     public float timer = 1f;
-    public float damage = 10f;
+    public int damage = 10;
 
     public void SetDirection()
     {

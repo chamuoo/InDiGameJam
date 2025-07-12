@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy2 : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class Enemy2 : MonoBehaviour
     SpriteRenderer spriteRenderer;
     Color originalColor;
     Animator animator;
+
+    ExpBar expbar;
 
     [SerializeField] GameObject attackCream;
 
@@ -28,12 +31,15 @@ public class Enemy2 : MonoBehaviour
     bool isBlocked = false;
     bool isPlayerNearable = false;
 
-    public float HP = 10f;
+    public int HP = 10;
     float takeDamageTimer = 0f;
     float dieTimer = 3f;
     bool isDie = false;
 
     int attackDamage = 2;
+
+    public Image hpFillImage;
+    public int currentHP;
 
     void Start()
     {
@@ -43,6 +49,8 @@ public class Enemy2 : MonoBehaviour
         originalColor = spriteRenderer.color;
         animator = GetComponent<Animator>();
 
+        expbar = FindObjectOfType<ExpBar>();
+        currentHP = HP;
     }
 
     void Move(Vector2 moveDir)
@@ -64,7 +72,7 @@ public class Enemy2 : MonoBehaviour
     {
         spriteRenderer.sortingOrder = -(int)(transform.position.y * 100);
 
-        if (HP > 0)
+        if (currentHP > 0)
         {
             if (aggroWall == null)
             {
@@ -106,6 +114,8 @@ public class Enemy2 : MonoBehaviour
                 {
                     attackAnim = 4;
                     attackCooldown = 0.3f;
+
+                    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[7]);
                 }
                 else if (attackAnim == 4)
                 {
@@ -114,6 +124,7 @@ public class Enemy2 : MonoBehaviour
                     Attack();
                     nowAttack = false;
                     canAttack = false;
+
                 }
             }
 
@@ -225,6 +236,9 @@ public class Enemy2 : MonoBehaviour
                 isDie = true;
                 //소리 재생 함수 필요
                 animator.SetBool("Die", true);
+
+                SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[8]);
+                expbar.AddExp(1);
             }
 
             if (dieTimer > 0)
@@ -240,11 +254,14 @@ public class Enemy2 : MonoBehaviour
     }
 
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(int damage)
     {
-        HP -= damage;
+        currentHP -= damage;
         //소리 재생 함수 필요
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[9]);
         takeDamageTimer = 0.5f;
+        float fillAmount = (float)currentHP / HP;
+        hpFillImage.fillAmount = fillAmount;
     }
 
 }
