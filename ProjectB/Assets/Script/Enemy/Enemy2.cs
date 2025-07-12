@@ -14,7 +14,7 @@ public class Enemy2 : MonoBehaviour
 
     [SerializeField] GameObject attackCream;
 
-    public float speed = 2f;
+    float speed = 0.64f;
     int moveAnim = 0;
     float moveCooldown = 0.5f;
     Vector2 targetDirection;
@@ -32,6 +32,8 @@ public class Enemy2 : MonoBehaviour
     float takeDamageTimer = 0f;
     float dieTimer = 3f;
     bool isDie = false;
+
+    public int attackDamage = 10;
 
     void Start()
     {
@@ -54,8 +56,9 @@ public class Enemy2 : MonoBehaviour
     }
     void Attack()
     {
-        GameObject fireObj = Instantiate(attackCream, transform.position, Quaternion.identity);
+        GameObject fireObj = Instantiate(attackCream, transform.position + (Vector3)(targetDirection * 0.15f), Quaternion.identity);
         fireObj.GetComponent<Enemy2_Fire>().SetDirection(targetDirection);
+        fireObj.GetComponent<Enemy2_Fire>().attackDamage = attackDamage;
     }
     void Update()
     {
@@ -65,7 +68,7 @@ public class Enemy2 : MonoBehaviour
         {
             if (aggroWall == null)
             {
-                aggroWall = GameObject.FindGameObjectWithTag("AggroWall");
+                aggroWall = GameObject.FindGameObjectWithTag("ChallengeWall");
                 if (aggroWall != null)
                     targetObject = aggroWall;
                 else if (player != null)
@@ -163,14 +166,14 @@ public class Enemy2 : MonoBehaviour
             if (Mathf.Abs(targetDirection.x) > 0.01f)
             {
                 if (targetDirection.x >= 0)
-                    this.transform.localScale = new Vector3(1, 1, 1);
+                    this.transform.localScale = new Vector3(0.32f, 0.32f, 0.32f);
                 else
-                    this.transform.localScale = new Vector3(-1, 1, 1);
+                    this.transform.localScale = new Vector3(-0.32f, 0.32f, 0.32f);
             }
             int wallLayer = LayerMask.GetMask("Wall");
-            RaycastHit2D longHit = Physics2D.Raycast(transform.position, targetDirection, 5f, wallLayer);
-            RaycastHit2D shortHit = Physics2D.Raycast(transform.position, targetDirection, 2f, wallLayer);
-            Debug.DrawRay(transform.position, targetDirection * 5f, Color.red);
+            RaycastHit2D longHit = Physics2D.Raycast(transform.position, targetDirection, 1.6f, wallLayer);
+            RaycastHit2D shortHit = Physics2D.Raycast(transform.position, targetDirection, 0.64f, wallLayer);
+            Debug.DrawRay(transform.position, targetDirection * 1.6f, Color.red);
 
             if (longHit.collider != null && longHit.collider.CompareTag("Wall"))
             {
@@ -185,10 +188,10 @@ public class Enemy2 : MonoBehaviour
                 isBlocked = false;
             }
 
-            if(player != null && Vector2.Distance(transform.position, player.transform.position) <= 7f)
+            if(player != null && Vector2.Distance(transform.position, player.transform.position) <= 2.24f)
             {
                 canAttack = true;
-                if (Vector2.Distance(transform.position, player.transform.position) <= 4f)
+                if (Vector2.Distance(transform.position, player.transform.position) <= 1.28f)
                     isPlayerNearable = true;
                 else
                     isPlayerNearable = false;

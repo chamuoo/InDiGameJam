@@ -5,8 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Wall
-  - AggroWall
   - Enemy
+  - ChallengeWall
+  - SpawnPoint
   layers:
   - Default
   - TransparentFX
@@ -14,13 +15,13 @@ TagManager:
   - 
   - Water
   - UI
+  - 
+  - 
+  - 
+  - 
+  - Bullet
   - Wall
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Enemy
   - 
   - 
   - 

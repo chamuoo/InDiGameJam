@@ -5,7 +5,7 @@ using UnityEngine;
 public class Fire_HardCandy : MonoBehaviour
 {
     Vector2 targetDirection;
-    public float speed = 15f;
+    float speed = 4.8f;
     Rigidbody2D rb;
     SpriteRenderer spriteRenderer;
     public float timer = 1f;

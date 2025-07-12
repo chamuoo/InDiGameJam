@@ -5,9 +5,9 @@ using UnityEngine;
 public class Fire_Macaron : MonoBehaviour
 {
     Vector2 targetDirection = new Vector2(1, 0);
-    float speed = 12f;
+    float speed = 3.84f;
     float nowSpeed = 0f;
-    float maxSpeed = 12f;
+    float maxSpeed = 3.84f;
     Rigidbody2D rb;
     float timer = 2f;
     SpriteRenderer spriteRenderer;
@@ -46,9 +46,13 @@ public class Fire_Macaron : MonoBehaviour
         else
             Destroy(this.gameObject);
 
-        if(nowSpeed < maxSpeed)
+        if(nowSpeed + speed * Time.deltaTime < maxSpeed)
         {
             nowSpeed += speed * Time.deltaTime;
+        }
+        else
+        {
+            nowSpeed = maxSpeed;
         }
 
     }

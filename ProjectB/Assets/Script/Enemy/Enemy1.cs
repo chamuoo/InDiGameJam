@@ -12,7 +12,7 @@ public class Enemy1 : MonoBehaviour
     Color originalColor;
     Animator animator;
 
-    public float speed = 2f;
+    float speed = 0.64f;
     int moveAnim = 0;
     float moveCooldown = 0.5f;
     Vector2 targetDirection;
@@ -30,7 +30,7 @@ public class Enemy1 : MonoBehaviour
     float dieTimer = 3f;
     bool isDie = false;
 
-    public float attackDamage = 10f;
+    public int attackDamage = 10;
 
     void Start()
     {
@@ -63,7 +63,7 @@ public class Enemy1 : MonoBehaviour
         {
             if (aggroWall == null)
             {
-                aggroWall = GameObject.FindGameObjectWithTag("AggroWall");
+                aggroWall = GameObject.FindGameObjectWithTag("ChallengeWall");
                 if (aggroWall != null)
                     targetObject = aggroWall;
                 else if (player != null)
@@ -82,11 +82,11 @@ public class Enemy1 : MonoBehaviour
             {
                 if (player != null && targetObject == player)
                 {
-                    //플레이어가 대미지를 입는 함수 호출
+                    player.GetComponent<PlayerController>().TakeDamage(attackDamage);
                 }
                 else if (aggroWall != null && targetObject == aggroWall)
                 {
-                    //도발장벽이 대미지를 입는 함수 호출
+                    aggroWall.GetComponent<Wall>().TakeDamage(attackDamage);
                 }
                 attackCooldown = 2f;
             }
@@ -147,9 +147,9 @@ public class Enemy1 : MonoBehaviour
                 if (Mathf.Abs(targetDirection.x) > 0.01f)
                 {
                     if (targetDirection.x >= 0)
-                        this.transform.localScale = new Vector3(1, 1, 1);
+                        this.transform.localScale = new Vector3(0.32f, 0.32f, 0.32f);
                     else
-                        this.transform.localScale = new Vector3(-1, 1, 1);
+                        this.transform.localScale = new Vector3(-0.32f, 0.32f, 0.32f);
                 }
             }
             else
@@ -157,9 +157,9 @@ public class Enemy1 : MonoBehaviour
                 if (Mathf.Abs(targetDirection.x) > 0.01f)
                 {
                     if (avoidingDirection.x >= 0)
-                        this.transform.localScale = new Vector3(1, 1, 1);
+                        this.transform.localScale = new Vector3(0.32f, 0.32f, 0.32f);
                     else
-                        this.transform.localScale = new Vector3(-1, 1, 1);
+                        this.transform.localScale = new Vector3(-0.32f, 0.32f, 0.32f);
                 }
             }
 

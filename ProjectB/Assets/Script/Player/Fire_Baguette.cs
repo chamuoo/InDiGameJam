@@ -5,7 +5,7 @@ using UnityEngine;
 public class Fire_Baguette : MonoBehaviour
 {
     Vector2 targetDirection;
-    public float speed = 12f;
+    float speed = 3.84f;
     Rigidbody2D rb;
     SpriteRenderer spriteRenderer;
     public float timer = 1f;
