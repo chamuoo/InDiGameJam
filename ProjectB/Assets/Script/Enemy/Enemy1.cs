@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy1 : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class Enemy1 : MonoBehaviour
     SpriteRenderer spriteRenderer;
     Color originalColor;
     Animator animator;
+
+    ExpBar expbar;
 
     float speed = 0.64f;
     int moveAnim = 0;
@@ -25,12 +28,15 @@ public class Enemy1 : MonoBehaviour
     bool canAttack = false;
     bool isAttack = false;
 
-    public float HP = 10f;
+    public int HP = 10;
     float takeDamageTimer = 0f;
     float dieTimer = 3f;
     bool isDie = false;
 
     int attackDamage = 2;
+
+    public Image hpFillImage;
+    public int currentHP;
 
     void Start()
     {
@@ -39,6 +45,9 @@ public class Enemy1 : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         originalColor = spriteRenderer.color;
         animator = GetComponent<Animator>();
+
+        expbar = FindObjectOfType<ExpBar>();
+        currentHP = HP;
     }
 
     void Move(Vector2 moveDir)
@@ -59,7 +68,7 @@ public class Enemy1 : MonoBehaviour
     {
         spriteRenderer.sortingOrder = -(int)(transform.position.y * 100);
 
-        if (HP > 0)
+        if (currentHP > 0)
         {
             if (aggroWall == null)
             {
@@ -182,6 +191,9 @@ public class Enemy1 : MonoBehaviour
                 isDie = true;
                 //소리 재생 함수 필요
                 animator.SetBool("Die", true);
+
+                SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[8]);
+                expbar.AddExp(1);
             }    
             if(dieTimer > 0)
             {
@@ -194,11 +206,14 @@ public class Enemy1 : MonoBehaviour
         }
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(int damage)
     {
-        HP -= damage;
+        currentHP -= damage;
         //소리 재생 함수필요
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[9]);
         takeDamageTimer = 0.5f;
+        float fillAmount = (float)currentHP / HP;
+        hpFillImage.fillAmount = fillAmount;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

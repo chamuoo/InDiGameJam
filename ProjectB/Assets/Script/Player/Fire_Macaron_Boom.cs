@@ -5,7 +5,7 @@ using UnityEngine;
 public class Fire_Macaron_Boom : MonoBehaviour
 {
     float timer = 0.2f;
-    public float damage = 3f;
+    public int damage = 10;
 
     int minBoomFragment = 6;
     int maxBoomFragment = 12;

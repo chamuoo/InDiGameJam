@@ -10,10 +10,8 @@ public class Fire_Baguette : MonoBehaviour
     Rigidbody2D rb;
     SpriteRenderer spriteRenderer;
     public float timer = 1f;
-    public int damage = 3;
+    public int damage = 10;
 
-    List<GameObject> hitEnemys = new List<GameObject>();
-    bool pass = false;
     public void SetDirection()
     {
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
@@ -47,28 +45,23 @@ public class Fire_Baguette : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        pass = false;
-        for(int i = 0; i < hitEnemys.Count; i++)
+        if (collision.CompareTag("Enemy"))
         {
-            if (collision.gameObject == hitEnemys[i])
-                pass = true;
+            if (collision.GetComponent<Enemy1>() != null)
+                collision.GetComponent<Enemy1>().TakeDamage(damage);
+            else if (collision.GetComponent<Enemy2>() != null)
+                collision.GetComponent<Enemy2>().TakeDamage(damage);
+            //투사체가 폭발하는 이펙트가 있다면 생성
         }
-        if (pass == false)
+        else if (collision.CompareTag("Wall"))
         {
-            if (collision.CompareTag("Enemy"))
-            {
-                if (collision.GetComponent<Enemy1>() != null)
-                    collision.GetComponent<Enemy1>().TakeDamage(damage);
-                else if (collision.GetComponent<Enemy2>() != null)
-                    collision.GetComponent<Enemy2>().TakeDamage(damage);
-                //투사체가 폭발하는 이펙트가 있다면 생성
-                hitEnemys.Add(collision.gameObject);
-            }
-            else if (collision.CompareTag("Wall") || collision.CompareTag("ChallengeWall"))
-            {
-                collision.GetComponent<Wall>().TakeDamage(damage);
-                hitEnemys.Add(collision.gameObject);
-            }
+            //벽이 대미지를 입는 함수 호출
+            //투사체가 폭발하는 이펙트가 있다면 생성
+        }
+        else if (collision.CompareTag("AggroWall"))
+        {
+            //벽이 대미지를 입는 함수 호출
+            //투사체가 폭발하는 이펙트가 있다면 생성
         }
     }
 }

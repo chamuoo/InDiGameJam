@@ -77,47 +77,47 @@ public class SoundManager : MonoBehaviour
     private void Start()
     {
         // 씬이 변경될 때 호출되는 이벤트에 함수를 등록
-        //SceneManager.activeSceneChanged += OnSceneChanged;
+        SceneManager.activeSceneChanged += OnSceneChanged;
 
     }
 
-    //private void OnSceneChanged(Scene currentScene, Scene nextScene)
-    //{
+    private void OnSceneChanged(Scene currentScene, Scene nextScene)
+    {
 
-    //    if (nextScene.name == "Main" || nextScene.name == "Main 1")
-    //    {
-    //        // BGM이 재생 중인 경우 멈춤
-    //        if (BGMSoundPlay.isPlaying)
-    //        {
-    //            BGMSoundPlay.Stop();
+        if (nextScene.name == "Test1" || nextScene.name == "Main")
+        {
+            // BGM이 재생 중인 경우 멈춤
+            if (BGMSoundPlay.isPlaying)
+            {
+                BGMSoundPlay.Stop();
 
-    //            BGMSoundPlay.clip = BGMs[2];
-    //            BGMSoundPlay.Play();
-    //        }
-    //    }
-    //    else if (nextScene.name == "Story")
-    //    {
-    //        // BGM이 재생 중인 경우 멈춤
-    //        if (BGMSoundPlay.isPlaying)
-    //        {
-    //            BGMSoundPlay.Stop();
+                BGMSoundPlay.clip = BGMs[2];
+                BGMSoundPlay.Play();
+            }
+        }
+        else if (nextScene.name == "Story")
+        {
+            // BGM이 재생 중인 경우 멈춤
+            if (BGMSoundPlay.isPlaying)
+            {
+                BGMSoundPlay.Stop();
 
-    //            BGMSoundPlay.clip = BGMs[1];
-    //            BGMSoundPlay.Play();
-    //        }
-    //    }
-    //    else if(nextScene.name == "Menu")
-    //    {
-    //        // BGM이 재생 중인 경우 멈춤
-    //        if (BGMSoundPlay.isPlaying)
-    //        {
-    //            BGMSoundPlay.Stop();
+                BGMSoundPlay.clip = BGMs[1];
+                BGMSoundPlay.Play();
+            }
+        }
+        else if (nextScene.name == "Menu")
+        {
+            // BGM이 재생 중인 경우 멈춤
+            if (BGMSoundPlay.isPlaying)
+            {
+                BGMSoundPlay.Stop();
 
-    //            BGMSoundPlay.clip = BGMs[0];
-    //            BGMSoundPlay.Play();
-    //        }
-    //    }
-    //}
+                BGMSoundPlay.clip = BGMs[0];
+                BGMSoundPlay.Play();
+            }
+        }
+    }
 
     private void Update()
     {
