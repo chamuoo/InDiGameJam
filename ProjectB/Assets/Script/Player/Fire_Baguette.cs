@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Fire_Baguette : MonoBehaviour
 {
@@ -11,9 +12,10 @@ public class Fire_Baguette : MonoBehaviour
     public float timer = 1f;
     public float damage = 10f;
 
-    public void SetDirection(Vector2 dir)
+    public void SetDirection()
     {
-        targetDirection = dir;
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        targetDirection = (mousePos - (Vector2)(transform.position)).normalized;
         float angle = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg;
         if (rb == null)
             rb = GetComponent<Rigidbody2D>();
@@ -25,6 +27,7 @@ public class Fire_Baguette : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        SetDirection();
     }
 
     private void Update()

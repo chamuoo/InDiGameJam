@@ -28,7 +28,7 @@ public class Weapon : MonoBehaviour
         playerInput.actions["Fire"].canceled -= OnFire;
     }
 
-    [SerializeField] float fireDelay = 1f;
+    [SerializeField] float fireDelay = 0.2f;
     private Coroutine fireCoroutine;
 
     private void OnFire(InputAction.CallbackContext context)
@@ -51,7 +51,10 @@ public class Weapon : MonoBehaviour
     // 총알 발사 메서드
     private void FireBullet()
     {
-        Instantiate(bullet, bulletSpawnPos.position, Quaternion.identity);
+        Instantiate(bullet, transform.position, Quaternion.identity);
+        Fire_Hardtack hardtackMethod = bullet.GetComponent<Fire_Hardtack>();
+        print(player.targetPos);
+        hardtackMethod.targetDirection = player.targetPos;
         // 사운드, 이펙트 등을 여기에 추가 
     }
 
