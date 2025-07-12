@@ -10,7 +10,8 @@ public class Fire_Hardtack : MonoBehaviour
     Rigidbody2D rb;
     [SerializeField] SpriteRenderer spriteRenderer;
     public float timer = 1f;
-    public float damage = 10f;
+    public int damage = 3;
+    bool isHit = false;
 
     public void SetDirection()
     {
@@ -49,41 +50,47 @@ public class Fire_Hardtack : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Enemy"))
+        if (isHit == false)
         {
-            if (collision.GetComponent<Enemy1>() != null)
-                collision.GetComponent<Enemy1>().TakeDamage(damage);
-            else if (collision.GetComponent<Enemy2>() != null)
-                collision.GetComponent<Enemy2>().TakeDamage(damage);
-            //투사체가 폭발하는 이펙트가 있다면 생성
-            Destroy(this.gameObject);
-        }
-        else if (collision.CompareTag("Wall"))
-        {
-            //벽이 대미지를 입는 함수 호출
-            //투사체가 폭발하는 이펙트가 있다면 생성
-            Destroy(this.gameObject);
-        }
-        else if (collision.CompareTag("ChallengeWall"))
-        {
-            //벽이 대미지를 입는 함수 호출
-            //투사체가 폭발하는 이펙트가 있다면 생성
+            if (collision.CompareTag("Enemy"))
+            {
+                isHit = true;
+                if (collision.GetComponent<Enemy1>() != null)
+                    collision.GetComponent<Enemy1>().TakeDamage(damage);
+                else if (collision.GetComponent<Enemy2>() != null)
+                    collision.GetComponent<Enemy2>().TakeDamage(damage);
+                //투사체가 폭발하는 이펙트가 있다면 생성
+                Destroy(this.gameObject);
+            }
+            else if (collision.CompareTag("Wall") || collision.CompareTag("ChallengeWall"))
+            {
+                isHit = true;
+                collision.GetComponent<Wall>().TakeDamage(damage);
+                Destroy(this.gameObject);
+            }
         }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.CompareTag("Enemy"))
+        if (isHit == false)
         {
-            //적이 대미지를 입는 함수 호출
-            //투사체가 폭발하는 이펙트가 있다면 생성
-            Destroy(this.gameObject);
-        }
-        else if (collision.CompareTag("Wall"))
-        {
-            //벽이 대미지를 입는 함수 호출
-            //투사체가 폭발하는 이펙트가 있다면 생성
-            Destroy(this.gameObject);
+            if (collision.CompareTag("Enemy"))
+            {
+                isHit = true;
+                if (collision.GetComponent<Enemy1>() != null)
+                    collision.GetComponent<Enemy1>().TakeDamage(damage);
+                else if (collision.GetComponent<Enemy2>() != null)
+                    collision.GetComponent<Enemy2>().TakeDamage(damage);
+                //투사체가 폭발하는 이펙트가 있다면 생성
+                Destroy(this.gameObject);
+            }
+            else if (collision.CompareTag("Wall") || collision.CompareTag("ChallengeWall"))
+            {
+                isHit = true;
+                collision.GetComponent<Wall>().TakeDamage(damage);
+                Destroy(this.gameObject);
+            }
         }
     }
 }

@@ -94,9 +94,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6a64024b24a40a45815609e1c751b28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetDirection: {x: 0.9999675, y: 0.008059499}
   spriteRenderer: {fileID: 6675331249469833475}
   timer: 1
-  damage: 10
+  damage: 3
 --- !u!1 &7696913830973795075
 GameObject:
   m_ObjectHideFlags: 0

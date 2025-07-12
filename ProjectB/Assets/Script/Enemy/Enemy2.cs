@@ -210,7 +210,7 @@ public class Enemy2 : MonoBehaviour
 
             if (takeDamageTimer > 0)
             {
-                spriteRenderer.color = new Color(0.8f, 0f, 0f, 0f);
+                spriteRenderer.color = new Color(0.8f, 0f, 0f, 1f);
                 takeDamageTimer -= Time.deltaTime;
             }
             else if (spriteRenderer.color != originalColor)
@@ -220,6 +220,8 @@ public class Enemy2 : MonoBehaviour
         }
         else
         {
+            Stop();
+            spriteRenderer.color = originalColor;
             if (!isDie)
             {
                 isDie = true;

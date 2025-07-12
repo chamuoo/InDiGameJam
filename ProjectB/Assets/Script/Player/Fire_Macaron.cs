@@ -14,7 +14,7 @@ public class Fire_Macaron : MonoBehaviour
     SpriteRenderer spriteRenderer;
     [SerializeField] GameObject macaron_Boom;
     [SerializeField] Sprite[] macaronSprites;
-    public float damage = 10f;
+    public float damage = 3f;
     bool isBoom = false;
 
     public void SetDirection()
@@ -62,7 +62,7 @@ public class Fire_Macaron : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(!isBoom && (collision.CompareTag("Enemy") || collision.CompareTag("Wall") || collision.CompareTag("AggroWall")))
+        if(!isBoom && (collision.CompareTag("Enemy") || collision.CompareTag("Wall") || collision.CompareTag("ChallengeWall")))
         {
             isBoom = true;
             GameObject obj = Instantiate(macaron_Boom,transform.position, Quaternion.identity);
