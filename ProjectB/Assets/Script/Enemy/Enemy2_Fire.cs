@@ -5,10 +5,12 @@ using UnityEngine;
 public class Enemy2_Fire : MonoBehaviour
 {
     Vector2 targetDirection;
-    public float speed = 3f;
+    float speed = 1f;
     Rigidbody2D rb;
     public float timer = 5f;
     SpriteRenderer spriteRenderer;
+    public int attackDamage = 10;
+    bool isHeat = false;
 
     public void SetDirection(Vector2 dir)
     {
@@ -56,17 +58,20 @@ public class Enemy2_Fire : MonoBehaviour
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (isHeat == false)
         {
-            //플레이어가 대미지를 입는 함수 호출
-            //투사체가 폭발하는 이펙트가 있다면 생성
-            Destroy(this.gameObject);
-        }
-        else if (collision.CompareTag("Wall"))
-        {
-            //벽이 대미지를 입는 함수 호출
-            //투사체가 폭발하는 이펙트가 있다면 생성
-            Destroy(this.gameObject);
+            if (collision.CompareTag("Player"))
+            {
+                isHeat = true;
+                collision.GetComponent<PlayerController>().TakeDamage(attackDamage);
+                Destroy(this.gameObject);
+            }
+            else if (collision.CompareTag("Wall"))
+            {
+                isHeat = true;
+                collision.GetComponent<Wall>().TakeDamage(attackDamage);
+                Destroy(this.gameObject);
+            }
         }
     }
 }

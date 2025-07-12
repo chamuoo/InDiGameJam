@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Wall
   - Enemy
+  - ChallengeWall
+  - SpawnPoint
   layers:
   - Default
   - TransparentFX

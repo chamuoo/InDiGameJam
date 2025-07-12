@@ -12,7 +12,7 @@ public class Fire_Macaron_BoomFragment : MonoBehaviour
     float timer = 1f;
     void Start()
     {
-        speed = Random.Range(0.5f, 4f);
+        speed = Random.Range(0.15f, 1.1f);
         maxSpeed = speed;
         randDir = Random.insideUnitCircle.normalized;
         spriteRenderer = GetComponent<SpriteRenderer>();
