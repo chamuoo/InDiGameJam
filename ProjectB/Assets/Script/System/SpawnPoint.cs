@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class SpawnPoint : MonoBehaviour
 {
-    // Start is called before the first frame update
+    bool isWave = false;
+    int spawnableEnemy1 = 0;
+    int spawnableEnemy2 = 0;
+
+
     void Start()
     {
         

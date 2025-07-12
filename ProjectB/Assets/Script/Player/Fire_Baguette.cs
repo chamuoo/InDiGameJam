@@ -8,7 +8,7 @@ public class Fire_Baguette : MonoBehaviour
     Vector2 targetDirection;
     float speed = 3.84f;
     Rigidbody2D rb;
-    SpriteRenderer spriteRenderer;
+    [SerializeField] SpriteRenderer spriteRenderer;
     public float timer = 1f;
     public int damage = 10;
 
@@ -26,7 +26,6 @@ public class Fire_Baguette : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
         SetDirection();
     }
 
@@ -52,15 +51,24 @@ public class Fire_Baguette : MonoBehaviour
             else if (collision.GetComponent<Enemy2>() != null)
                 collision.GetComponent<Enemy2>().TakeDamage(damage);
             //투사체가 폭발하는 이펙트가 있다면 생성
+            GameObject explosionEffect = Resources.Load<GameObject>("Explore/MiniExploreAnim");
+
+            if(explosionEffect != null)
+            {
+                GameObject spawnedEffect = Instantiate(explosionEffect, transform.position, Quaternion.identity);
+                Destroy(spawnedEffect, 1f);
+            }
         }
         else if (collision.CompareTag("Wall"))
         {
             //벽이 대미지를 입는 함수 호출
+            collision.GetComponent<Wall>().TakeDamage(damage);
             //투사체가 폭발하는 이펙트가 있다면 생성
         }
         else if (collision.CompareTag("AggroWall"))
         {
             //벽이 대미지를 입는 함수 호출
+            collision.GetComponent<Wall>().TakeDamage(damage);
             //투사체가 폭발하는 이펙트가 있다면 생성
         }
     }

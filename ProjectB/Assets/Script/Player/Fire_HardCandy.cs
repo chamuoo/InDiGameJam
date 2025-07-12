@@ -72,18 +72,21 @@ public class Fire_HardCandy : MonoBehaviour
         if (collision.CompareTag("Enemy"))
         {
             //적이 대미지를 입는 함수 호출
+            
             //투사체가 폭발하는 이펙트가 있다면 생성
             Destroy(this.gameObject);
         }
         else if (collision.CompareTag("Wall"))
         {
             //벽이 대미지를 입는 함수 호출
+            collision.GetComponent<Wall>().TakeDamage(damage);
             //투사체가 폭발하는 이펙트가 있다면 생성
             Destroy(this.gameObject);
         }
         else if (collision.CompareTag("AggroWall"))
         {
             //벽이 대미지를 입는 함수 호출
+            collision.GetComponent<Wall>().TakeDamage(damage);
             //투사체가 폭발하는 이펙트가 있다면 생성
         }
     }

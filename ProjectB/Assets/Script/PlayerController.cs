@@ -66,6 +66,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         anim = GetComponent<Animator>();
+        tilemap = GameObject.Find("Tilemap").GetComponent<Tilemap>();
         inventory = GameObject.Find("WallIcon").GetComponent<Inventory>();
 
         wallPrefab = Resources.LoadAll<GameObject>("Walls").ToList();
@@ -77,6 +78,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+
         if (rigidbody.velocity != Vector2.zero)
             rigidbody.velocity = Vector2.zero;
         // 새로운 InputSystem의 마우스 위치 가져오기
@@ -121,6 +123,9 @@ public class PlayerController : MonoBehaviour
 
         transform.Translate(movement * movespeed * Time.deltaTime);
 
+        LimitToCameraBounds();
+
+
         // 벽 생성
         if(Keyboard.current.spaceKey.wasPressedThisFrame)
         {
@@ -139,7 +144,7 @@ public class PlayerController : MonoBehaviour
                 Collider2D hit = Physics2D.OverlapCircle(centerPos, 0.1f, LayerMask.GetMask("Wall"));
                 if(hit == null)
                 {
-                    SendWallPoint(centerPos, inventory.keyNum, wallPrefab[inventory.keyNum - 1], inventory.keyNum);
+                    SendWallPoint(centerPos, inventory.keyNum, wallPrefab[inventory.keyNum], inventory.keyNum);
 
                     SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[3]);
                 }
@@ -160,9 +165,16 @@ public class PlayerController : MonoBehaviour
     {
         moveInput = context.ReadValue<Vector2>();
         float Move = (int) (Mathf.Abs(moveInput.x) + Mathf.Abs(moveInput.y)); 
-
         anim.SetFloat("Move", Move);
-        
+
+        // 방향 반전
+        if(moveInput.x != 0)
+        {
+            Vector3 localScale = transform.localScale;
+            localScale.x = moveInput.x > 0 ? Mathf.Abs(localScale.x) : -Mathf.Abs(localScale.x);
+            transform.localScale = localScale;
+        }
+
     }
 
     // 게임매니저가 할 예정임.
@@ -197,5 +209,24 @@ public class PlayerController : MonoBehaviour
         float fillAmount = (float)currentHP / hp;
         hpFillImage.fillAmount = fillAmount;
         Debug.Log(fillAmount);
+    }
+
+    void LimitToCameraBounds()
+    {
+        Camera cam = Camera.main;
+        Vector3 camPos = cam.transform.position;
+
+        float camHalfHeight = cam.orthographicSize;
+        float camHalfWidth = camHalfHeight * cam.aspect;
+
+        float minX = camPos.x - camHalfWidth;
+        float maxX = camPos.x + camHalfWidth;
+        float minY = camPos.y - camHalfHeight;
+        float maxY = camPos.y + camHalfHeight;
+
+        Vector3 pos = transform.position;
+        pos.x = Mathf.Clamp(pos.x, minX, maxX);
+        pos.y = Mathf.Clamp(pos.y, minY, maxY);
+        transform.position = pos;
     }
 }

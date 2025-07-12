@@ -103,8 +103,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1897251672487350656}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.007, y: -0.195, z: 0}
-  m_LocalScale: {x: 0.15, y: 0.15, z: 0}
+  m_LocalPosition: {x: 0.014, y: -0.195, z: 0}
+  m_LocalScale: {x: 4, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6786041787340765407}
@@ -152,15 +152,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: ed75b468a86ffc04fbb89f506abb26d5, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.35, y: 1.5}
+  m_Size: {x: 0.16, y: 0.16}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &5908641345851496319
@@ -175,18 +175,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a03da4b056df158408ae5f46b46168bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-<<<<<<< Updated upstream:ProjectB/Assets/Prefab/Player.prefab
   bullet: {fileID: 3674814319743914717, guid: 36b268850b735d94a8abe0a3fffec64a, type: 3}
-=======
-  bulletPrefabs:
-  - {fileID: 3674814319743914717, guid: 36b268850b735d94a8abe0a3fffec64a, type: 3}
-  - {fileID: 3205706760715021417, guid: 0f54d2f084bfcc04093ab029cfe1c47b, type: 3}
-  - {fileID: 3034485193386852028, guid: fc1e9679a6da39147b63bdc9329582b7, type: 3}
-  - {fileID: 3331477337368467843, guid: 24277ace0338a4849bb056498cad3886, type: 3}
->>>>>>> Stashed changes:ProjectB/Assets/Resources/Prefab/Player.prefab
   bulletSpawnPos: {fileID: 6786041787340765407}
-  weaponIcon: {fileID: 0}
-  player: {fileID: 2232235208588869340}
+  weapon: {fileID: 0}
+  player: {fileID: 0}
   fireDelay: 1
 --- !u!1 &1971250354226629244
 GameObject:

@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,6 +25,7 @@ public class Wall : MonoBehaviour
     [SerializeField] Sprite challenge;
 
     SpriteRenderer spriteRenderer;
+    [SerializeField] GameObject explosionEffect;
 
     [SerializeField] private BoxCollider2D explosionTriggerCollider;
     [SerializeField] private float explosionDuration = 0.1f;
@@ -40,13 +41,6 @@ public class Wall : MonoBehaviour
 
         if(wallType == WallType.BombWall)
         {
-            if(explosionTriggerCollider == null || !explosionTriggerCollider.isTrigger)
-            {
-                Debug.LogError($"Æø¹ß¿ë Collider°¡ ¾ø°Å³ª Trigger°¡ ¾Æ´Ô: {gameObject.name}", this);
-                enabled = false;
-                return;
-            }
-
             explosionTriggerCollider.enabled = false;
         }
 
@@ -98,11 +92,11 @@ public class Wall : MonoBehaviour
 
     IEnumerator BombSequence()
     {
-        Debug.Log($"BombWall Æø¹ß: {gameObject.name}");
+        Debug.Log($"BombWall í­ë°œ: {gameObject.name}");
 
         explosionTriggerCollider.enabled = true;
 
-        // Æø¹ß ¹üÀ§ ³»ÀÇ ¸ğµç Äİ¶óÀÌ´õ¸¦ °¨Áö
+        // í­ë°œ ë²”ìœ„ ë‚´ì˜ ëª¨ë“  ì½œë¼ì´ë”ë¥¼ ê°ì§€
         Vector2 center = explosionTriggerCollider.bounds.center;
         Vector2 size = explosionTriggerCollider.bounds.size;
         Collider2D[] hits = Physics2D.OverlapBoxAll(center, size, 0f);
@@ -123,11 +117,11 @@ public class Wall : MonoBehaviour
             }
         }
 
-        // Àá±ñ ´ë±â ÈÄ Äİ¶óÀÌ´õ ºñÈ°¼ºÈ­ (È¤½Ã ¸ğ¸¦ Æ®¸®°Å Ãæµ¹ ´ëºñ)
+        // ì ê¹ ëŒ€ê¸° í›„ ì½œë¼ì´ë” ë¹„í™œì„±í™” (í˜¹ì‹œ ëª¨ë¥¼ íŠ¸ë¦¬ê±° ì¶©ëŒ ëŒ€ë¹„)
         yield return new WaitForSeconds(explosionDuration);
 
         explosionTriggerCollider.enabled = false;
-        Debug.Log($"BombWall ÆÄ±«: {gameObject.name}");
+        Debug.Log($"BombWall íŒŒê´´: {gameObject.name}");
 
         Destroy(gameObject);
     }
@@ -136,17 +130,17 @@ public class Wall : MonoBehaviour
     {
         if(target.CompareTag("Enemy"))
         {
-            Debug.Log($"Enemy {target.name}¿¡ µ¥¹ÌÁö: {damage}");
-            // TODO: Àû¿¡°Ô µ¥¹ÌÁö Ã³¸®
+            Debug.Log($"Enemy {target.name}ì— ë°ë¯¸ì§€: {damage}");
+            // TODO: ì ì—ê²Œ ë°ë¯¸ì§€ ì²˜ë¦¬
         }
         else if(target.CompareTag("Player"))
         {
-            Debug.Log($"Player {target.name}¿¡ µ¥¹ÌÁö: {damage}");
+            Debug.Log($"Player {target.name}ì— ë°ë¯¸ì§€: {damage}");
             target.GetComponent<PlayerController>()?.TakeDamage(damage);
         }
         else if(target.CompareTag("Wall"))
         {
-            Debug.Log($"Wall {target.name}¿¡ µ¥¹ÌÁö: {damage}");
+            Debug.Log($"Wall {target.name}ì— ë°ë¯¸ì§€: {damage}");
             target.GetComponent<Wall>()?.TakeDamage(damage);
         }
     }
@@ -157,13 +151,13 @@ public class Wall : MonoBehaviour
 
         GameObject target = other.gameObject;
 
-        // [Áß¿ä] Enemy ÅÂ±×¸¸ °¨Áö
+        // [ì¤‘ìš”] Enemy íƒœê·¸ë§Œ ê°ì§€
         if(target != null && target.CompareTag("Enemy"))
         {
             if(!autoDetectedEnemies.Contains(target))
             {
                 autoDetectedEnemies.Add(target);
-                Debug.Log($"[AutoWall] °¨ÁöµÊ: {target.name}");
+                Debug.Log($"[AutoWall] ê°ì§€ë¨: {target.name}");
             }
         }
     }
@@ -174,11 +168,26 @@ public class Wall : MonoBehaviour
 
         GameObject target = other.gameObject;
 
-        // Enemy°¡ ºüÁ®³ª°£ °æ¿ì ¸®½ºÆ®¿¡¼­ Á¦°Å
+        // Enemyê°€ ë¹ ì ¸ë‚˜ê°„ ê²½ìš° ë¦¬ìŠ¤íŠ¸ì—ì„œ ì œê±°
         if(target != null && target.CompareTag("Enemy"))
         {
             autoDetectedEnemies.Remove(target);
-            Debug.Log($"[AutoWall] ÀÌÅ»µÊ: {target.name}");
+            Debug.Log($"[AutoWall] ì´íƒˆë¨: {target.name}");
         }
+    }
+
+    private void OnDestroy()
+    {
+        if(wallType == WallType.BombWall)
+        {
+            GameObject explosionEffect = Resources.Load<GameObject>("Explore/ExploreAnim");
+
+            if(explosionEffect != null)
+            {
+                GameObject spawnedEffect = Instantiate(explosionEffect, transform.position, Quaternion.identity);
+                Destroy(spawnedEffect, 1f);
+            }
+        }
+
     }
 }

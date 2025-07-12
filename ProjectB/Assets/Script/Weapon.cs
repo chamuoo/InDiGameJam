@@ -1,20 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
+ï»¿using System.Collections;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class Weapon : MonoBehaviour
 {
-    GameObject bullet;
+    [SerializeField] GameObject bullet;
     [SerializeField] Transform bulletSpawnPos;
-    [SerializeField] WeaponIcon weaponIcon;
+    [SerializeField] GameObject weapon;
+    WeaponIcon weaponIcon;
 
     PlayerInput playerInput;
     [SerializeField] PlayerController player;
 
     private void Start()
     {
+        weaponIcon = weapon.GetComponent<WeaponIcon>();
         player = GetComponentInParent<PlayerController>();
     }
 
@@ -31,84 +32,66 @@ public class Weapon : MonoBehaviour
         playerInput.actions["Fire"].canceled -= OnFire;
     }
 
-    private void Update()
-    {
-
-    }
-
     [SerializeField] float fireDelay = 0.2f;
     private Coroutine fireCoroutine;
 
     private void OnFire(InputAction.CallbackContext context)
     {
-        if(context.performed)  // ¸¶¿ì½º¸¦ ´©¸£±â ½ÃÀÛÇÑ ¼ø°£
+        if(context.performed)  // ë§ˆìš°ìŠ¤ë¥¼ ëˆ„ë¥´ê¸° ì‹œì‘í•œ ìˆœê°„
         {
             player.anim.SetBool("Attack", true);
-            fireCoroutine = StartCoroutine(FireContinuously());
+            if(fireCoroutine == null)
+                fireCoroutine = StartCoroutine(FireContinuously());
         }
-        else if(context.canceled)  // ¸¶¿ì½º ¹öÆ°¿¡¼­ ¼ÕÀ» ¶¾ ¼ø°£
+        else if(context.canceled)  // ë§ˆìš°ìŠ¤ ë²„íŠ¼ì—ì„œ ì†ì„ ë—€ ìˆœê°„
         {
             if(fireCoroutine != null)
             {
                 player.anim.SetBool("Attack", false);
-                StopCoroutine(fireCoroutine);
+                if(fireCoroutine != null)
+                {
+                    StopCoroutine(fireCoroutine);
+                    fireCoroutine = null;
+                }
             }
         }
     }
 
-    private void LoadBulletFromSprite()
-    {
-        if (weaponIcon == null || weaponIcon.img == null || weaponIcon.img.sprite == null) return;
-
-        string spriteName = "Fire_" + weaponIcon.img.sprite.name;
-        GameObject loadedPrefab = Resources.Load<GameObject>($"Prefab/Player/{spriteName}");
-        print($"localedPrefabs: {loadedPrefab}, spriteName: {spriteName}" );
-
-        if (loadedPrefab != null)
-        {
-            bullet = loadedPrefab;
-        }
-    }
-
-    // ÃÑ¾Ë ¹ß»ç ¸Ş¼­µå
+    // ì´ì•Œ ë°œì‚¬ ë©”ì„œë“œ
     private void FireBullet()
     {
-<<<<<<< Updated upstream
+        Sprite sprite = weaponIcon.GetCurrentWeaponSprite();
+        if(sprite == null)
+        {
+            return;
+        }
+
+        print("ìŠ¤í”„ë¼ì´íŠ¸: " + sprite);
+
+        string objectName = "Fire_" + sprite.name;
+        string resourcePath = "Prefab/Player/" + objectName;
+
+        bullet = Resources.Load<GameObject>(resourcePath);
+
         Instantiate(bullet, transform.position, Quaternion.identity);
         Fire_Hardtack hardtackMethod = bullet.GetComponent<Fire_Hardtack>();
         print(player.targetPos);
         hardtackMethod.targetDirection = player.targetPos;
-        // »ç¿îµå, ÀÌÆåÆ® µîÀ» ¿©±â¿¡ Ãß°¡
+        // ì‚¬ìš´ë“œ, ì´í™íŠ¸ ë“±ì„ ì—¬ê¸°ì— ì¶”ê°€
         // 
         SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[6]);
-=======
-        LoadBulletFromSprite();
-        if(bullet == null) return;
-
-        GameObject spawnedBullet = Instantiate(bullet, bulletSpawnPos.position, Quaternion.identity);
-        Fire_Hardtack hardtackMethod = spawnedBullet.GetComponent<Fire_Hardtack>();
-        if(hardtackMethod != null)
-        {
-            hardtackMethod.targetDirection = player.targetPos;
-        }
-
-        //Instantiate(bullet, transform.position, Quaternion.identity);
-        //Fire_Hardtack hardtackMethod = bullet.GetComponent<Fire_Hardtack>();
-        //print(player.targetPos);
-        //hardtackMethod.targetDirection = player.targetPos;
-        // »ç¿îµå, ÀÌÆåÆ® µîÀ» ¿©±â¿¡ Ãß°¡ 
->>>>>>> Stashed changes
     }
 
-    // ÀÏÁ¤ ½Ã°£¸¶´Ù ¹ß»çÇÏ´Â ·çÆ¾
+    // ì¼ì • ì‹œê°„ë§ˆë‹¤ ë°œì‚¬í•˜ëŠ” ë£¨í‹´
     private IEnumerator FireContinuously()
     {
         while(true)
         {
-            // ÃÑ¾Ë ¹ß»ç
+            // ì´ì•Œ ë°œì‚¬
             FireBullet();
             yield return new WaitForSeconds(fireDelay);
         }
+        
     }
 }
 

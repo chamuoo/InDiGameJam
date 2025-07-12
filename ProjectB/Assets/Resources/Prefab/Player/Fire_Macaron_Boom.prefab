@@ -83,5 +83,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77925363366138446b8605209d7cd094, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 3
+  damage: 10
   boomFragment: {fileID: 8312984399618573732, guid: e80dc1438f2d8064b9acb08c3a5faa40, type: 3}

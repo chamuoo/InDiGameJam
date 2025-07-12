@@ -4,14 +4,6 @@ using UnityEngine.InputSystem;
 using Unity.VisualScripting;
 using System.Collections.Generic;
 
-public struct GunCount
-{
-    public int pirtalCount;
-    public int UZICount;
-    public int RailGunCount;
-    public int RocketRuncherCount;
-}
-
 public class WeaponIcon : MonoBehaviour
 {
     [SerializeField] private List<Sprite> weaponSprites;
@@ -23,11 +15,17 @@ public class WeaponIcon : MonoBehaviour
     public float minValue = 0f;
     public float maxValue = 10f;
 
-    public int previousIconIndex  = -1;
+    private int currentIndex = 0;
+    private int previousIconIndex = -1;
+
+    private float lastScrollTime = 0f;
+    [SerializeField] private float scrollIdleResetTime = 1.5f; // 입력 없을 시 초기화 시간 (초)
 
     private void Start()
     {
         img = GetComponent<Image>();
+
+        UpdateIconSprite();
     }
 
     private void Update()
@@ -38,13 +36,10 @@ public class WeaponIcon : MonoBehaviour
 
         if(Mathf.Abs(scrollDelta) > 0.01f)
         {
-            scrollValue += scrollDelta * scrollSpeed * Time.deltaTime;
-            scrollValue = Mathf.Clamp(scrollValue, minValue, maxValue);
-            Debug.Log($"Scroll Value: {scrollValue}");
-        }
-        else if(scrollDelta >= 10f)
-        {
-            scrollDelta = 0;
+            if(scrollDelta > 0f)
+                currentIndex = (currentIndex + 1) % weaponSprites.Count;
+            else if(scrollDelta < 0f)
+                currentIndex = (currentIndex - 1 + weaponSprites.Count) % weaponSprites.Count;
         }
 
         UpdateIconSprite();
@@ -52,16 +47,19 @@ public class WeaponIcon : MonoBehaviour
 
     private void UpdateIconSprite()
     {
-        int newIconIndex = Mathf.FloorToInt(scrollValue / 2f) % weaponSprites.Count;
-        newIconIndex = (newIconIndex + weaponSprites.Count) % weaponSprites.Count; // 음수 결과 방지
-
-        // 이전 인덱스와 다를 때만 스프라이트 업데이트
-        if(newIconIndex != previousIconIndex)
+        if(currentIndex != previousIconIndex)
         {
-            img.sprite = weaponSprites[newIconIndex]; // [한 줄] 스프라이트 할당
-            previousIconIndex = newIconIndex; // 현재 인덱스 저장
+            img.sprite = weaponSprites[currentIndex];
+            previousIconIndex = currentIndex;
 
-            Debug.Log($"아이콘 변경: {weaponSprites[newIconIndex].name} (인덱스: {newIconIndex})");
+            Debug.Log($"아이콘 변경: {weaponSprites[currentIndex].name} (인덱스: {currentIndex})");
         }
+    }
+
+    public int GetCurrentIndex() => currentIndex;
+
+    public Sprite GetCurrentWeaponSprite()
+    {
+        return weaponSprites[currentIndex]; // currentIndex는 내부에서 관리 중
     }
 }

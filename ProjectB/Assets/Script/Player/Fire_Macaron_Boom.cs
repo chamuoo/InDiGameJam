@@ -44,10 +44,12 @@ public class Fire_Macaron_Boom : MonoBehaviour
         else if(collision.CompareTag("Wall"))
         {
             //벽이 대미지를 입는 함수 호출
+            collision.GetComponent<Wall>().TakeDamage(damage);
         }
         else if(collision.CompareTag("AggroWall"))
         {
             //벽이 대미지를 입는 함수 호출
+            collision.GetComponent<Wall>().TakeDamage(damage);
         }
     }
 }

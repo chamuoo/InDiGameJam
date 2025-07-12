@@ -136,8 +136,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d64d8f9577f5054fade6b57cb5d600f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 15
   timer: 1
-  damage: 3
+  damage: 10
   hardCandySprites:
   - {fileID: 21300000, guid: 0958b1fb88b157f4586abeafc5ebc1c9, type: 3}
   - {fileID: 21300000, guid: 27ef76eb55828c748a7df3ccf78d2aca, type: 3}

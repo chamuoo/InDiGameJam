@@ -10,7 +10,7 @@ public class Enemy2_Fire : MonoBehaviour
     public float timer = 5f;
     SpriteRenderer spriteRenderer;
     public int attackDamage = 2;
-    bool isHit = false;
+    bool isHeat = false;
 
     public void SetDirection(Vector2 dir)
     {
@@ -43,17 +43,17 @@ public class Enemy2_Fire : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (isHit == false)
+        if (isHeat == false)
         {
             if (collision.CompareTag("Player"))
             {
-                isHit = true;
+                isHeat = true;
                 collision.gameObject.GetComponent<PlayerController>().TakeDamage(attackDamage);
                 Destroy(this.gameObject);
             }
             else if (collision.CompareTag("Wall") || collision.CompareTag("ChallengeWall"))
             {
-                isHit = true;
+                isHeat = true;
                 collision.GetComponent<Wall>().TakeDamage(attackDamage);
                 Destroy(this.gameObject);
             }
@@ -61,17 +61,17 @@ public class Enemy2_Fire : MonoBehaviour
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (isHit == false)
+        if (isHeat == false)
         {
             if (collision.CompareTag("Player"))
             {
-                isHit = true;
+                isHeat = true;
                 collision.GetComponent<PlayerController>().TakeDamage(attackDamage);
                 Destroy(this.gameObject);
             }
             else if (collision.CompareTag("Wall") || collision.CompareTag("ChallengeWall"))
             {
-                isHit = true;
+                isHeat = true;
                 collision.GetComponent<Wall>().TakeDamage(attackDamage);
                 Destroy(this.gameObject);
             }
