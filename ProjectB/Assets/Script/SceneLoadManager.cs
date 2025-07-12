@@ -50,7 +50,7 @@ public class SceneLoadManager : MonoBehaviour
 
     public void GoInGame()
     {
-        SceneManager.LoadScene("UI");
+        SceneManager.LoadScene("Test1");
         MainMenuCanvas.SetActive(false);
         SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[0]);
     }

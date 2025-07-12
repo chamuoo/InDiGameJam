@@ -10,8 +10,7 @@ public class Fire_Hardtack : MonoBehaviour
     Rigidbody2D rb;
     [SerializeField] SpriteRenderer spriteRenderer;
     public float timer = 1f;
-    public float damage = 10f;
-
+    public int damage = 3;
     public void SetDirection()
     {
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());

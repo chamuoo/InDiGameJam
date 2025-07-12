@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -26,6 +27,9 @@ public class PlayerController : MonoBehaviour
     int hp = 10;
     int MaxPoint = 50;
 
+    public Image hpFillImage;
+    public int currentHP;
+
     Rigidbody2D rigidbody;
 
     public Vector2 targetPos { get; private set; }  // 플레이어 방향벡터
@@ -41,6 +45,12 @@ public class PlayerController : MonoBehaviour
     float dot;
 
     float movespeed = 1f;
+
+    BreadPointBar breadpointbar;
+
+    public AudioSource footstepAudioSourse01;
+    public AudioSource footstepAudioSourse02;
+    private bool switchStepSound = false;
 
     private void OnEnable()
     {
@@ -62,6 +72,9 @@ public class PlayerController : MonoBehaviour
 
         wallPrefab = Resources.LoadAll<GameObject>("Walls").ToList();
         rigidbody = GetComponent<Rigidbody2D>();
+
+        breadpointbar = FindObjectOfType<BreadPointBar>();
+        currentHP = hp;
     }
 
     private void Update()
@@ -92,6 +105,22 @@ public class PlayerController : MonoBehaviour
             movement.Normalize();
         }
 
+        if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
+        {
+            if (switchStepSound && !footstepAudioSourse02.isPlaying)
+            {
+                switchStepSound = !switchStepSound;
+                footstepAudioSourse01.Play();
+
+
+            }
+            else if (!switchStepSound && !footstepAudioSourse01.isPlaying)
+            {
+                switchStepSound = !switchStepSound;
+                footstepAudioSourse02.Play();
+            }
+        }
+
         transform.Translate(movement * movespeed * Time.deltaTime);
 
         // 벽 생성
@@ -113,6 +142,8 @@ public class PlayerController : MonoBehaviour
                 if(hit == null)
                 {
                     SendWallPoint(centerPos, inventory.keyNum, wallPrefab[inventory.keyNum - 1], inventory.keyNum);
+
+                    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[3]);
                 }
                 else
                 {
@@ -133,6 +164,7 @@ public class PlayerController : MonoBehaviour
         float Move = (int) (Mathf.Abs(moveInput.x) + Mathf.Abs(moveInput.y)); 
 
         anim.SetFloat("Move", Move);
+        
     }
 
     // 게임매니저가 할 예정임.
@@ -141,20 +173,31 @@ public class PlayerController : MonoBehaviour
     {
         _point -= point;
         Instantiate(targetWall, center, Quaternion.identity);
+        breadpointbar.CostBreadPoint(point);
     }
 
     // 포인트 획득
     public void ApeendWallPoint(int point)
     {
         _point = _point >= 50 ? Mathf.Max(MaxPoint) : _point + point;
+        breadpointbar.AddBreadPoint(point);
     }
 
     public void TakeDamage(int damage)
     {
-        hp -= damage;
-        print($"플레이어의 hp피는 {hp}입니다.");
+        currentHP -= damage;
+        UpdateHPBar();
+        print($"플레이어의 hp피는 {currentHP}입니다.");
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[4]);
 
-        if(hp <= 0)
+        if (hp <= 0)
             Destroy(this.gameObject);
+    }
+
+    void UpdateHPBar()
+    {
+        float fillAmount = (float)currentHP / hp;
+        hpFillImage.fillAmount = fillAmount;
+        Debug.Log(fillAmount);
     }
 }

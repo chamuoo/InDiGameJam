@@ -23,18 +23,18 @@ public class BreadPointBar : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.U))
-        {
-            AddBreadPoint(10);
-        }
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            CostBreadPoint(1);
-        }
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            CostBreadPoint(5);
-        }
+        //if (Input.GetKeyDown(KeyCode.U))
+        //{
+        //    AddBreadPoint(10);
+        //}
+        //if (Input.GetKeyDown(KeyCode.I))
+        //{
+        //    CostBreadPoint(1);
+        //}
+        //if (Input.GetKeyDown(KeyCode.O))
+        //{
+        //    CostBreadPoint(5);
+        //}
     }
 
     public void AddBreadPoint(int BreadPoint)
