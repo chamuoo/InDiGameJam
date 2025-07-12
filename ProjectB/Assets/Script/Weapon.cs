@@ -1,11 +1,14 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class Weapon : MonoBehaviour
 {
-    [SerializeField] GameObject bullet;
+    GameObject bullet;
     [SerializeField] Transform bulletSpawnPos;
+    [SerializeField] WeaponIcon weaponIcon;
 
     PlayerInput playerInput;
     [SerializeField] PlayerController player;
@@ -28,6 +31,11 @@ public class Weapon : MonoBehaviour
         playerInput.actions["Fire"].canceled -= OnFire;
     }
 
+    private void Update()
+    {
+
+    }
+
     [SerializeField] float fireDelay = 0.2f;
     private Coroutine fireCoroutine;
 
@@ -48,9 +56,24 @@ public class Weapon : MonoBehaviour
         }
     }
 
+    private void LoadBulletFromSprite()
+    {
+        if (weaponIcon == null || weaponIcon.img == null || weaponIcon.img.sprite == null) return;
+
+        string spriteName = "Fire_" + weaponIcon.img.sprite.name;
+        GameObject loadedPrefab = Resources.Load<GameObject>($"Prefab/Player/{spriteName}");
+        print($"localedPrefabs: {loadedPrefab}, spriteName: {spriteName}" );
+
+        if (loadedPrefab != null)
+        {
+            bullet = loadedPrefab;
+        }
+    }
+
     // 총알 발사 메서드
     private void FireBullet()
     {
+<<<<<<< Updated upstream
         Instantiate(bullet, transform.position, Quaternion.identity);
         Fire_Hardtack hardtackMethod = bullet.GetComponent<Fire_Hardtack>();
         print(player.targetPos);
@@ -58,6 +81,23 @@ public class Weapon : MonoBehaviour
         // 사운드, 이펙트 등을 여기에 추가
         // 
         SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[6]);
+=======
+        LoadBulletFromSprite();
+        if(bullet == null) return;
+
+        GameObject spawnedBullet = Instantiate(bullet, bulletSpawnPos.position, Quaternion.identity);
+        Fire_Hardtack hardtackMethod = spawnedBullet.GetComponent<Fire_Hardtack>();
+        if(hardtackMethod != null)
+        {
+            hardtackMethod.targetDirection = player.targetPos;
+        }
+
+        //Instantiate(bullet, transform.position, Quaternion.identity);
+        //Fire_Hardtack hardtackMethod = bullet.GetComponent<Fire_Hardtack>();
+        //print(player.targetPos);
+        //hardtackMethod.targetDirection = player.targetPos;
+        // 사운드, 이펙트 등을 여기에 추가 
+>>>>>>> Stashed changes
     }
 
     // 일정 시간마다 발사하는 루틴

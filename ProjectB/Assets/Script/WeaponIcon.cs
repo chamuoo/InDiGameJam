@@ -16,20 +16,18 @@ public class WeaponIcon : MonoBehaviour
 {
     [SerializeField] private List<Sprite> weaponSprites;
 
-    Image img;
+    public Image img;
 
     public float scrollValue = 0f;
     public float scrollSpeed = 1f;
     public float minValue = 0f;
     public float maxValue = 10f;
 
-    private int previousIconIndex = -1;
+    public int previousIconIndex  = -1;
 
     private void Start()
     {
         img = GetComponent<Image>();
-
-        UpdateIconSprite();
     }
 
     private void Update()
@@ -43,6 +41,10 @@ public class WeaponIcon : MonoBehaviour
             scrollValue += scrollDelta * scrollSpeed * Time.deltaTime;
             scrollValue = Mathf.Clamp(scrollValue, minValue, maxValue);
             Debug.Log($"Scroll Value: {scrollValue}");
+        }
+        else if(scrollDelta >= 10f)
+        {
+            scrollDelta = 0;
         }
 
         UpdateIconSprite();

@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using System.Reflection;
+using System.Collections.Generic;
 
 public struct WallCount
 {
@@ -10,16 +11,12 @@ public struct WallCount
     public int strongCount;
     public int bombCount;
     public int autoCount;
-    public int callengeCount;
+    public int challengeCount;
 }
 
 public class Inventory : MonoBehaviour
 {
-    [SerializeField] Sprite normal;
-    [SerializeField] Sprite strong;
-    [SerializeField] Sprite bomb;
-    [SerializeField] Sprite auto;
-    [SerializeField] Sprite callenge;
+    [SerializeField] private List<Sprite> wallSprites;
 
     WallCount wallCount;
 
@@ -32,78 +29,63 @@ public class Inventory : MonoBehaviour
         Icon = GetComponent<Image>();
 
         keyNum = 1;
-        Icon.sprite = normal;
+        Icon.sprite = wallSprites[0];
+
+        UpdateIconSprite();
     }
 
     void Update()
     {
-        if(Keyboard.current.digit1Key.wasPressedThisFrame)    // 일반 블록 아이콘 보여주기
-        {
-            keyNum = 1;
-            Icon.sprite = normal;
-        }
-        else if(Keyboard.current.digit2Key.wasPressedThisFrame)    // 일반 블록 아이콘 보여주기
-        {
-            keyNum = 2;
-            Icon.sprite = strong;
-        }
-        else if(Keyboard.current.digit3Key.wasPressedThisFrame)    // 일반 블록 아이콘 보여주기
-        {
-            keyNum = 3;
-            Icon.sprite = bomb;
-        }
-        else if(Keyboard.current.digit4Key.wasPressedThisFrame)    // 일반 블록 아이콘 보여주기
-        {
-            keyNum = 4;
-            Icon.sprite = auto;
-        }
-        else if(Keyboard.current.digit5Key.wasPressedThisFrame)    // 일반 블록 아이콘 보여주기
-        {
-            keyNum = 5;
-            Icon.sprite = callenge;
-        }
+        // Q 키를 눌렀을 때 keyNum 감소 및 순환 (2줄)
+        if(Keyboard.current.qKey.wasPressedThisFrame) { keyNum = (keyNum - 1 == 0) ? wallSprites.Count : keyNum - 1; UpdateIconSprite(); }
+        // E 키를 눌렀을 때 keyNum 증가 및 순환 (2줄)
+        else if(Keyboard.current.eKey.wasPressedThisFrame) { keyNum = (keyNum + 1 > wallSprites.Count) ? 1 : keyNum + 1; UpdateIconSprite(); }
 
+        else if(Keyboard.current.digit1Key.wasPressedThisFrame) { keyNum = 1; UpdateIconSprite(); }
+        else if(Keyboard.current.digit2Key.wasPressedThisFrame) { keyNum = 2; UpdateIconSprite(); }
+        else if(Keyboard.current.digit3Key.wasPressedThisFrame) { keyNum = 3; UpdateIconSprite(); }
+        else if(Keyboard.current.digit4Key.wasPressedThisFrame) { keyNum = 4; UpdateIconSprite(); }
+        else if(Keyboard.current.digit5Key.wasPressedThisFrame) { keyNum = 5; UpdateIconSprite(); }
     }
 
-    public int AddCount(int count, int KeyNum)
+    private void UpdateIconSprite()
     {
-        switch(keyNum)
-        {
-            case 1:
-                return wallCount.normalCount += count;
-            case 2:
-                return wallCount.strongCount += count;
-            case 3:
-                return wallCount.bombCount += count;
-            case 4:
-                return wallCount.autoCount += count;
-            case 5:
-                return wallCount.callengeCount += count;
-            default:
-                break;
-        }
+        int spriteIndex = keyNum - 1;
 
-        return 0;
+        if(spriteIndex >= 0 && spriteIndex < wallSprites.Count)
+        {
+            Icon.sprite = wallSprites[spriteIndex];
+            Debug.Log($"아이콘 변경: {wallSprites[spriteIndex].name}, 현재 keyNum: {keyNum}");
+        }
+        else
+        {
+            Debug.LogWarning($"유효하지 않은 keyNum ({keyNum})으로 인해 아이콘을 업데이트할 수 없습니다. 스프라이트 리스트 크기: {wallSprites.Count}");
+        }
     }
 
-    public int RemoveCount(int count, int KeyNum)
+    public int AddCount(int count, int wallTypeKeyNum)
     {
-        switch(keyNum)
+        switch(wallTypeKeyNum)
         {
-            case 1:
-                return wallCount.normalCount -= count;
-            case 2:
-                return wallCount.strongCount -= count;
-            case 3:
-                return wallCount.bombCount -= count;
-            case 4:
-                return wallCount.autoCount -= count;
-            case 5:
-                return wallCount.callengeCount -= count;
-            default:
-                break;
+            case 1: return wallCount.normalCount += count;
+            case 2: return wallCount.strongCount += count;
+            case 3: return wallCount.bombCount += count;
+            case 4: return wallCount.autoCount += count;
+            case 5: return wallCount.challengeCount += count;
+            default: return 0;
         }
+    }
 
-        return 0;
+    public int RemoveCount(int count, int wallTypeKeyNum)
+    {
+        switch(wallTypeKeyNum)
+        {
+            case 1: return wallCount.normalCount -= count;
+            case 2: return wallCount.strongCount -= count;
+            case 3: return wallCount.bombCount -= count;
+            case 4: return wallCount.autoCount -= count;
+            case 5: return wallCount.challengeCount -= count;
+            default: return 0;
+        }
     }
 }

@@ -42,8 +42,6 @@ public class PlayerController : MonoBehaviour
         new Vector2Int(-1, -1)
 };
 
-    float dot;
-
     float movespeed = 1f;
 
     BreadPointBar breadpointbar;
@@ -68,7 +66,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         anim = GetComponent<Animator>();
-        inventory = GameObject.Find("Icon").GetComponent<Inventory>();
+        inventory = GameObject.Find("WallIcon").GetComponent<Inventory>();
 
         wallPrefab = Resources.LoadAll<GameObject>("Walls").ToList();
         rigidbody = GetComponent<Rigidbody2D>();
