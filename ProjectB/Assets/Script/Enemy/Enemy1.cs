@@ -30,7 +30,7 @@ public class Enemy1 : MonoBehaviour
     float dieTimer = 3f;
     bool isDie = false;
 
-    public int attackDamage = 10;
+    int attackDamage = 2;
 
     void Start()
     {
@@ -78,7 +78,7 @@ public class Enemy1 : MonoBehaviour
             if (attackCooldown > 0)
                 attackCooldown -= Time.deltaTime;
 
-            if (targetObject != null && canAttack && isAttack)
+            if (targetObject != null && canAttack && isAttack && attackCooldown <= 0)
             {
                 if (player != null && targetObject == player)
                 {

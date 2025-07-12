@@ -1,19 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
 using UnityEngine;
 
 public class Fire_Hardtack : MonoBehaviour
 {
-    Vector2 targetDirection;
+    public Vector2 targetDirection;
     float speed = 3.84f;
     Rigidbody2D rb;
-    SpriteRenderer spriteRenderer;
+    [SerializeField] SpriteRenderer spriteRenderer;
     public float timer = 1f;
     public float damage = 10f;
 
-    public void SetDirection(Vector2 dir)
+    public void SetDirection()
     {
-        targetDirection = dir;
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        targetDirection = (mousePos - (Vector2)(transform.position)).normalized;
         float angle = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg;
         if (rb == null)
             rb = GetComponent<Rigidbody2D>();
@@ -23,16 +25,21 @@ public class Fire_Hardtack : MonoBehaviour
     }
     private void Start()
     {
+        print("start");
         rb = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        SetDirection();
     }
 
     private void Update()
     {
+
         spriteRenderer.sortingOrder = -(int)(transform.position.y * 100);
 
         if (rb != null && targetDirection != null)
+        {
+            print($"작동중, 방향은 {targetDirection}");
             rb.velocity = targetDirection * speed;
+        }
 
         if (timer > 0)
             timer -= Time.deltaTime;
@@ -57,7 +64,7 @@ public class Fire_Hardtack : MonoBehaviour
             //투사체가 폭발하는 이펙트가 있다면 생성
             Destroy(this.gameObject);
         }
-        else if (collision.CompareTag("AggroWall"))
+        else if (collision.CompareTag("ChallengeWall"))
         {
             //벽이 대미지를 입는 함수 호출
             //투사체가 폭발하는 이펙트가 있다면 생성

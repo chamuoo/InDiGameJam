@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Fire_Macaron : MonoBehaviour
 {
-    Vector2 targetDirection = new Vector2(1, 0);
+    Vector2 targetDirection;
     float speed = 3.84f;
     float nowSpeed = 0f;
     float maxSpeed = 3.84f;
@@ -16,9 +17,10 @@ public class Fire_Macaron : MonoBehaviour
     public float damage = 10f;
     bool isBoom = false;
 
-    public void SetDirection(Vector2 dir)
+    public void SetDirection()
     {
-        targetDirection = dir;
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        targetDirection = (mousePos - (Vector2)(transform.position)).normalized;
         float angle = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg;
         if (rb == null)
             rb = GetComponent<Rigidbody2D>();
@@ -32,6 +34,7 @@ public class Fire_Macaron : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         if(macaronSprites.Length >= 1)
             spriteRenderer.sprite = macaronSprites[Random.Range(0, macaronSprites.Length)];
+        SetDirection();
     }
 
     private void Update()
