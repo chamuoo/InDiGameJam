@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Fire_HardCandy : MonoBehaviour
 {
@@ -12,9 +13,10 @@ public class Fire_HardCandy : MonoBehaviour
     public float damage = 10f;
     [SerializeField] Sprite[] hardCandySprites;
 
-    public void SetDirection(Vector2 dir)
+    public void SetDirection()
     {
-        targetDirection = dir;
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        targetDirection = (mousePos - (Vector2)(transform.position)).normalized;
         float angle = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg;
         if (rb == null)
             rb = GetComponent<Rigidbody2D>();
@@ -30,6 +32,7 @@ public class Fire_HardCandy : MonoBehaviour
         {
             spriteRenderer.sprite = hardCandySprites[Random.Range(0, hardCandySprites.Length)];
         }
+        SetDirection();
     }
 
     private void Update()

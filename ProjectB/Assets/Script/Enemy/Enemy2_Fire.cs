@@ -9,7 +9,7 @@ public class Enemy2_Fire : MonoBehaviour
     Rigidbody2D rb;
     public float timer = 5f;
     SpriteRenderer spriteRenderer;
-    public int attackDamage = 10;
+    public int attackDamage = 2;
     bool isHeat = false;
 
     public void SetDirection(Vector2 dir)
@@ -43,17 +43,20 @@ public class Enemy2_Fire : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Player"))
+        if (isHeat == false)
         {
-            //플레이어가 대미지를 입는 함수 호출
-            //투사체가 폭발하는 이펙트가 있다면 생성
-            Destroy(this.gameObject);
-        }
-        else if(collision.CompareTag("Wall"))
-        {
-            //벽이 대미지를 입는 함수 호출
-            //투사체가 폭발하는 이펙트가 있다면 생성
-            Destroy(this.gameObject);
+            if (collision.CompareTag("Player"))
+            {
+                isHeat = true;
+                collision.gameObject.GetComponent<PlayerController>().TakeDamage(attackDamage);
+                Destroy(this.gameObject);
+            }
+            else if (collision.CompareTag("Wall") || collision.CompareTag("ChallengeWall"))
+            {
+                isHeat = true;
+                collision.GetComponent<Wall>().TakeDamage(attackDamage);
+                Destroy(this.gameObject);
+            }
         }
     }
     private void OnTriggerStay2D(Collider2D collision)
@@ -66,7 +69,7 @@ public class Enemy2_Fire : MonoBehaviour
                 collision.GetComponent<PlayerController>().TakeDamage(attackDamage);
                 Destroy(this.gameObject);
             }
-            else if (collision.CompareTag("Wall"))
+            else if (collision.CompareTag("Wall") || collision.CompareTag("ChallengeWall"))
             {
                 isHeat = true;
                 collision.GetComponent<Wall>().TakeDamage(attackDamage);

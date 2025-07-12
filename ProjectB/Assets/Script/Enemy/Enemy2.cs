@@ -33,7 +33,7 @@ public class Enemy2 : MonoBehaviour
     float dieTimer = 3f;
     bool isDie = false;
 
-    public int attackDamage = 10;
+    int attackDamage = 2;
 
     void Start()
     {

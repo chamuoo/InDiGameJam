@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour
     int hp = 10;
     int MaxPoint = 50;
 
+    Rigidbody2D rigidbody;
+
     public Vector2 targetPos { get; private set; }  // 플레이어 방향벡터
 
     private readonly List<Vector2Int> disallowedAbsoluteTileCoords = new List<Vector2Int>
@@ -59,10 +61,13 @@ public class PlayerController : MonoBehaviour
         inventory = GameObject.Find("Icon").GetComponent<Inventory>();
 
         wallPrefab = Resources.LoadAll<GameObject>("Walls").ToList();
+        rigidbody = GetComponent<Rigidbody2D>();
     }
 
     private void Update()
     {
+        if (rigidbody.velocity != Vector2.zero)
+            rigidbody.velocity = Vector2.zero;
         // 새로운 InputSystem의 마우스 위치 가져오기
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         Vector2 playerPos = transform.position;
