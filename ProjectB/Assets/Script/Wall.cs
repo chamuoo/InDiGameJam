@@ -1,5 +1,6 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public enum WallType
 {
@@ -10,14 +11,13 @@ public enum WallType
     ChallengeWall
 }
 
-// 노말 블럭
 public class Wall : MonoBehaviour
 {
     [SerializeField] WallType wallType;
-
     int hp = 10;
 
-    // 블록 이미지들
+    private const int BOMB_EXPLOSION_DAMAGE = 5;
+
     [SerializeField] Sprite normal;
     [SerializeField] Sprite strong;
     [SerializeField] Sprite bomb;
@@ -26,132 +26,159 @@ public class Wall : MonoBehaviour
 
     SpriteRenderer spriteRenderer;
 
-    private Tilemap tilemap;
+    [SerializeField] private BoxCollider2D explosionTriggerCollider;
+    [SerializeField] private float explosionDuration = 0.1f;
 
+    private HashSet<GameObject> affectedObjectsInExplosion;
+    private bool hasExploded = false;
 
-    [SerializeField] LayerMask enemyLayer;
-
-    int bombDamage = 5;
-    private bool hasExploded = false; // 중복 방지를 위한 플래그
+    public List<GameObject> autoDetectedEnemies = new List<GameObject>();
 
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        tilemap = FindObjectOfType<Tilemap>();
+        if(wallType == WallType.BombWall)
+        {
+            if(explosionTriggerCollider == null || !explosionTriggerCollider.isTrigger)
+            {
+                Debug.LogError($"폭발용 Collider가 없거나 Trigger가 아님: {gameObject.name}", this);
+                enabled = false;
+                return;
+            }
+
+            explosionTriggerCollider.enabled = false;
+        }
 
         switch(wallType)
         {
-            case WallType.Normal:    // 일반 벽
-                spriteRenderer.sprite = normal;
-                hp = 10;
-                break;
-            case WallType.StrongWall:    // 단단한 벽
-                spriteRenderer.sprite = strong;
-                hp = 20;
-                break;
-            case WallType.BombWall:      // 폭탄 벽
-                spriteRenderer.sprite = bomb;
-                hp = 1; // Bombs usually have low HP to trigger quickly
-                break;
-            case WallType.AutoWall:      // 오토타겟팅 벽
-                spriteRenderer.sprite = auto;
-                hp = 10;
-                break;
-            case WallType.ChallengeWall:     // 도발 벽
-                spriteRenderer.sprite = challenge;
-                hp = 10;
-                break;
+            case WallType.Normal: hp = 10; break;
+            case WallType.StrongWall: hp = 20; break;
+            case WallType.BombWall: hp = 1; break;
+            case WallType.AutoWall: hp = 10; break;
+            case WallType.ChallengeWall: hp = 10; break;
+        }
 
-            default:     // 아무것도 없음
-                print("없는 블록");
-                break;
+        spriteRenderer.sprite = GetSpriteForWallType(wallType);
+    }
+
+    private Sprite GetSpriteForWallType(WallType type)
+    {
+        switch(type)
+        {
+            case WallType.Normal: return normal;
+            case WallType.StrongWall: return strong;
+            case WallType.BombWall: return bomb;
+            case WallType.AutoWall: return auto;
+            case WallType.ChallengeWall: return challenge;
+            default: return null;
         }
     }
 
     public void TakeDamage(int damage)
     {
+        if(wallType == WallType.BombWall && hasExploded) return;
+
         hp -= damage;
-        print($"해당 블럭: {this.gameObject.name}, 남은 HP: {hp}");
+        Debug.Log($"{gameObject.name} HP: {hp}");
 
         if(hp <= 0)
         {
-            if(wallType == WallType.BombWall)
+            if(wallType == WallType.BombWall && hasExploded == false)
             {
-                Bomb();
+                hasExploded = true;
+                StartCoroutine(BombSequence());
             }
-            Destroy(this.gameObject);
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 
-    void Bomb()
+    IEnumerator BombSequence()
     {
-        Debug.Log($"--- BombWall 폭발: 주변 3x3 범위에 {bombDamage} 데미지 적용 시작 ---");
+        Debug.Log($"BombWall 폭발: {gameObject.name}");
 
-        // 해당 플레이어의 위치를 Int로 바꿔서 블럭의 그리드 값과 비슷한 위치를 출력
-        Vector3Int bombWallCell = tilemap.WorldToCell(transform.position);
+        explosionTriggerCollider.enabled = true;
 
-        bool affectedAnyObject = false;
+        // 폭발 범위 내의 모든 콜라이더를 감지
+        Vector2 center = explosionTriggerCollider.bounds.center;
+        Vector2 size = explosionTriggerCollider.bounds.size;
+        Collider2D[] hits = Physics2D.OverlapBoxAll(center, size, 0f);
 
-        // 3 x 3 인식
-        for(int x = bombWallCell.x - 1; x <= bombWallCell.x + 1; x++)
+        affectedObjectsInExplosion = new HashSet<GameObject>();
+
+        foreach(Collider2D col in hits)
         {
-            for(int y = bombWallCell.y - 1; y <= bombWallCell.y + 1; y++)
+            GameObject target = col.gameObject;
+
+            if(target == gameObject || affectedObjectsInExplosion.Contains(target))
+                continue;
+
+            if(target.CompareTag("Enemy") || target.CompareTag("Player") || target.CompareTag("Wall"))
             {
-                Vector3Int currentGridCell = new Vector3Int(x, y, bombWallCell.z);
-
-                Vector3 currentCellWorldCenter = tilemap.GetCellCenterWorld(currentGridCell);
-
-                Collider2D[] hitObjects = Physics2D.OverlapBoxAll(
-                    currentCellWorldCenter,
-                    new Vector2(0.9f, 0.9f),
-                    0f
-                );
-
-                if(hitObjects.Length > 0)
-                {
-                    Debug.Log($"타일 ({currentGridCell.x}, {currentGridCell.y})에서 객체 발견:");
-                    foreach(Collider2D hitCollider in hitObjects)
-                    {
-                        if(hitCollider.gameObject == this.gameObject)
-                        {
-                            Debug.Log($"- (자신) {hitCollider.name}는 건너뜝니다.");
-                            continue;
-                        }
-
-                        // Check tags and apply damage
-                        if(hitCollider.CompareTag("Enemy"))
-                        {
-                            affectedAnyObject = true;
-                            Debug.Log($"- Enemy {hitCollider.name}에게 {bombDamage} 데미지 적용.");
-                            // 몬스터 타격 함수 호출
-                            
-                        }
-                        else if(hitCollider.CompareTag("Player"))
-                        {
-                            affectedAnyObject = true;
-                            Debug.Log($"- Player {hitCollider.name}에게 {bombDamage} 데미지 적용.");
-                            hitCollider.GetComponent<PlayerController>()?.TakeDamage(bombDamage);
-                        }
-                        else if(hitCollider.CompareTag("Wall"))
-                        {
-                            affectedAnyObject = true;
-                            Debug.Log($"- Wall {hitCollider.name}에게 {bombDamage} 데미지 적용.");
-                            hitCollider.GetComponent<Wall>()?.TakeDamage(bombDamage);
-                        }
-                        else
-                        {
-                            Debug.Log($"- 인식된 객체: {hitCollider.name} (태그 없음 또는 해당 없음)");
-                        }
-                    }
-                }
+                ApplyDamageToTarget(target, BOMB_EXPLOSION_DAMAGE);
+                affectedObjectsInExplosion.Add(target);
             }
         }
 
-        if(!affectedAnyObject)
+        // 잠깐 대기 후 콜라이더 비활성화 (혹시 모를 트리거 충돌 대비)
+        yield return new WaitForSeconds(explosionDuration);
+
+        explosionTriggerCollider.enabled = false;
+        Debug.Log($"BombWall 파괴: {gameObject.name}");
+
+        Destroy(gameObject);
+    }
+
+    private void ApplyDamageToTarget(GameObject target, int damage)
+    {
+        if(target.CompareTag("Enemy"))
         {
-            Debug.Log("주변 3x3 범위에서 영향을 받은 객체를 찾지 못했습니다.");
+            Debug.Log($"Enemy {target.name}에 데미지: {damage}");
+            // TODO: 적에게 데미지 처리
         }
-        Debug.Log("--- 폭발 효과 종료 ---");
+        else if(target.CompareTag("Player"))
+        {
+            Debug.Log($"Player {target.name}에 데미지: {damage}");
+            target.GetComponent<PlayerController>()?.TakeDamage(damage);
+        }
+        else if(target.CompareTag("Wall"))
+        {
+            Debug.Log($"Wall {target.name}에 데미지: {damage}");
+            target.GetComponent<Wall>()?.TakeDamage(damage);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if(wallType != WallType.AutoWall || !explosionTriggerCollider.enabled) return;
+
+        GameObject target = other.gameObject;
+
+        // [중요] Enemy 태그만 감지
+        if(target != null && target.CompareTag("Enemy"))
+        {
+            if(!autoDetectedEnemies.Contains(target))
+            {
+                autoDetectedEnemies.Add(target);
+                Debug.Log($"[AutoWall] 감지됨: {target.name}");
+            }
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if(wallType != WallType.AutoWall) return;
+
+        GameObject target = other.gameObject;
+
+        // Enemy가 빠져나간 경우 리스트에서 제거
+        if(target != null && target.CompareTag("Enemy"))
+        {
+            autoDetectedEnemies.Remove(target);
+            Debug.Log($"[AutoWall] 이탈됨: {target.name}");
+        }
     }
 }

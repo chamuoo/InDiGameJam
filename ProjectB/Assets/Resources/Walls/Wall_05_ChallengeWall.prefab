@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 357637324462601785}
   m_Layer: 11
   m_Name: Wall_05_ChallengeWall
-  m_TagString: Wall
+  m_TagString: AggroWall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -104,9 +104,9 @@ MonoBehaviour:
   bomb: {fileID: 21300000, guid: 80357ab54e51cfc4abf7fb7cc35fea51, type: 3}
   auto: {fileID: 21300000, guid: 8c6582468a71f3e4d84f346633d09477, type: 3}
   challenge: {fileID: 21300000, guid: 5a06a0ab08a645b4ea90eaddf8f7d1de, type: 3}
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 4096
+  explosionTriggerCollider: {fileID: 357637324462601785}
+  explosionDuration: 0.1
+  autoDetectedEnemies: []
 --- !u!61 &357637324462601785
 BoxCollider2D:
   m_ObjectHideFlags: 0

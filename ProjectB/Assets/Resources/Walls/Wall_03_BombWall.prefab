@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5856242650272626856}
   - component: {fileID: 2412525002035898420}
   - component: {fileID: 357637324462601785}
+  - component: {fileID: 2684222372792329123}
   m_Layer: 11
   m_Name: Wall_03_BombWall
   m_TagString: Wall
@@ -75,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 80357ab54e51cfc4abf7fb7cc35fea51, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -83,7 +84,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &2412525002035898420
@@ -104,9 +105,8 @@ MonoBehaviour:
   bomb: {fileID: 21300000, guid: 80357ab54e51cfc4abf7fb7cc35fea51, type: 3}
   auto: {fileID: 21300000, guid: 8c6582468a71f3e4d84f346633d09477, type: 3}
   challenge: {fileID: 21300000, guid: 5a06a0ab08a645b4ea90eaddf8f7d1de, type: 3}
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 4096
+  explosionTriggerCollider: {fileID: 2684222372792329123}
+  explosionDuration: 0.1
 --- !u!61 &357637324462601785
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -132,4 +132,30 @@ BoxCollider2D:
   m_AutoTiling: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
+--- !u!61 &2684222372792329123
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8782617982179668248}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 2
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 2.5, y: 2.5}
   m_EdgeRadius: 0
