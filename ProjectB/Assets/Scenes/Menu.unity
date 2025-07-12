@@ -1880,6 +1880,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 602624e65bc522248943e0e774f77c5f, type: 3}
   - {fileID: 8300000, guid: 48a8b03fc0bea6f40ad8454880d8ce5e, type: 3}
   - {fileID: 8300000, guid: dad56072888a24c47b761dd46cf0c6ee, type: 3}
+  - {fileID: 8300000, guid: e4fcc10eb5c231845b63d2656b2a64ed, type: 3}
+  - {fileID: 8300000, guid: c8479e14467d00d44a692e6b22d6b429, type: 3}
   settingsPanel: {fileID: 1051275358}
   m_AudioMixer: {fileID: 24100000, guid: 5c14802bdc7c7d84eb2908188de31d9d, type: 2}
   m_MusicMasterSlider: {fileID: 660051972}

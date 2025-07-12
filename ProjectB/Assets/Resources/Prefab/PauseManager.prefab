@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PausePanel: {fileID: 5541472608871771931}
+  DiePanel: {fileID: 0}
   isPaused: 0
 --- !u!1 &5541472607982204841
 GameObject:

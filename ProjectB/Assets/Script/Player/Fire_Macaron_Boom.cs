@@ -5,11 +5,12 @@ using UnityEngine;
 public class Fire_Macaron_Boom : MonoBehaviour
 {
     float timer = 0.2f;
-    public int damage = 10;
+    public int damage = 3;
 
     int minBoomFragment = 6;
     int maxBoomFragment = 12;
     [SerializeField] GameObject boomFragment;
+    List<GameObject> hitObjects = new List<GameObject>();
     void Start()
     {
         int fragmentCount = Random.Range(minBoomFragment, maxBoomFragment);
@@ -34,22 +35,23 @@ public class Fire_Macaron_Boom : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Enemy"))
+
+        if(!hitObjects.Contains(collision.gameObject))
         {
-            if (collision.GetComponent<Enemy1>() != null)
-                collision.GetComponent<Enemy1>().TakeDamage(damage);
-            else if (collision.GetComponent<Enemy2>() != null)
-                collision.GetComponent<Enemy2>().TakeDamage(damage);
+            hitObjects.Add(collision.gameObject);
+
+            if (collision.CompareTag("Enemy"))
+            {
+                if (collision.GetComponent<Enemy1>() != null)
+                    collision.GetComponent<Enemy1>().TakeDamage(damage);
+                else if (collision.GetComponent<Enemy2>() != null)
+                    collision.GetComponent<Enemy2>().TakeDamage(damage);
+            }
+            else if (collision.CompareTag("Wall") || collision.CompareTag("ChallengeWall"))
+            {
+                collision.GetComponent<Wall>().TakeDamage(damage);
+            }
         }
-        else if(collision.CompareTag("Wall"))
-        {
-            //벽이 대미지를 입는 함수 호출
-            collision.GetComponent<Wall>().TakeDamage(damage);
-        }
-        else if(collision.CompareTag("AggroWall"))
-        {
-            //벽이 대미지를 입는 함수 호출
-            collision.GetComponent<Wall>().TakeDamage(damage);
-        }
+
     }
 }

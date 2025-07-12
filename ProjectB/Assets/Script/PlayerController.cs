@@ -30,7 +30,9 @@ public class PlayerController : MonoBehaviour
     public Image hpFillImage;
     public int currentHP;
 
-    Rigidbody2D rigidbody;
+    [SerializeField]Rigidbody2D rigidbody;
+
+    public bool isDie { get; private set; } = false;
 
     public Vector2 targetPos { get; private set; }  // 플레이어 방향벡터
 
@@ -66,21 +68,21 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         anim = GetComponent<Animator>();
-        tilemap = GameObject.Find("Tilemap").GetComponent<Tilemap>();
         inventory = GameObject.Find("WallIcon").GetComponent<Inventory>();
 
         wallPrefab = Resources.LoadAll<GameObject>("Walls").ToList();
         rigidbody = GetComponent<Rigidbody2D>();
 
         breadpointbar = FindObjectOfType<BreadPointBar>();
+
         currentHP = hp;
     }
 
     private void Update()
     {
-
         if (rigidbody.velocity != Vector2.zero)
             rigidbody.velocity = Vector2.zero;
+
         // 새로운 InputSystem의 마우스 위치 가져오기
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         Vector2 playerPos = transform.position;
@@ -123,11 +125,11 @@ public class PlayerController : MonoBehaviour
 
         transform.Translate(movement * movespeed * Time.deltaTime);
 
+        // 화면 밖 이동 제한
         LimitToCameraBounds();
 
-
         // 벽 생성
-        if(Keyboard.current.spaceKey.wasPressedThisFrame)
+        if(Keyboard.current.spaceKey.wasPressedThisFrame && LevelManager.Instance.isWave == false)
         {
             print("벽 설치 시도 타일: " + targetCell);
 
@@ -144,7 +146,7 @@ public class PlayerController : MonoBehaviour
                 Collider2D hit = Physics2D.OverlapCircle(centerPos, 0.1f, LayerMask.GetMask("Wall"));
                 if(hit == null)
                 {
-                    SendWallPoint(centerPos, inventory.keyNum, wallPrefab[inventory.keyNum], inventory.keyNum);
+                    SendWallPoint(centerPos, inventory.keyNum, wallPrefab[inventory.keyNum - 1], inventory.keyNum);
 
                     SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[3]);
                 }
@@ -158,57 +160,6 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("벽을 설치할 포인트가 부족합니다.");
             }
         }
-    }
-
-
-    public void OnMove(InputAction.CallbackContext context)
-    {
-        moveInput = context.ReadValue<Vector2>();
-        float Move = (int) (Mathf.Abs(moveInput.x) + Mathf.Abs(moveInput.y)); 
-        anim.SetFloat("Move", Move);
-
-        // 방향 반전
-        if(moveInput.x != 0)
-        {
-            Vector3 localScale = transform.localScale;
-            localScale.x = moveInput.x > 0 ? Mathf.Abs(localScale.x) : -Mathf.Abs(localScale.x);
-            transform.localScale = localScale;
-        }
-
-    }
-
-    // 게임매니저가 할 예정임.
-    // 포인트 사용
-    public void SendWallPoint(Vector3 center, int point, GameObject targetWall, int keyNum)
-    {
-        _point -= point;
-        Instantiate(targetWall, center, Quaternion.identity);
-        breadpointbar.CostBreadPoint(point);
-    }
-
-    // 포인트 획득
-    public void ApeendWallPoint(int point)
-    {
-        _point = _point >= 50 ? Mathf.Max(MaxPoint) : _point + point;
-        breadpointbar.AddBreadPoint(point);
-    }
-
-    public void TakeDamage(int damage)
-    {
-        currentHP -= damage;
-        UpdateHPBar();
-        print($"플레이어의 hp피는 {currentHP}입니다.");
-        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[4]);
-
-        if (hp <= 0)
-            Destroy(this.gameObject);
-    }
-
-    void UpdateHPBar()
-    {
-        float fillAmount = (float)currentHP / hp;
-        hpFillImage.fillAmount = fillAmount;
-        Debug.Log(fillAmount);
     }
 
     void LimitToCameraBounds()
@@ -228,5 +179,61 @@ public class PlayerController : MonoBehaviour
         pos.x = Mathf.Clamp(pos.x, minX, maxX);
         pos.y = Mathf.Clamp(pos.y, minY, maxY);
         transform.position = pos;
+    }
+
+
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        moveInput = context.ReadValue<Vector2>();
+        float Move = (int) (Mathf.Abs(moveInput.x) + Mathf.Abs(moveInput.y)); 
+
+        anim.SetFloat("Move", Move);
+
+        // 방향 반전
+        if(moveInput.x != 0)
+        {
+            Vector3 localScale = transform.localScale;
+            localScale.x = moveInput.x > 0 ? Mathf.Abs(localScale.x) : -Mathf.Abs(localScale.x);
+            transform.localScale = localScale;
+        }
+
+    }
+
+    // 게임매니저가 할 예정임.
+    // 포인트 사용
+    public void SendWallPoint(Vector3 center, int point, GameObject targetWall, int keyNum)
+    {
+        if(_point <= 0) return;
+        _point -= point;
+        Instantiate(targetWall, center, Quaternion.identity);
+        breadpointbar.CostBreadPoint(point);
+    }
+
+    // 포인트 획득
+    public void ApeendWallPoint(int point)
+    {
+        _point = _point >= 50 ? Mathf.Max(MaxPoint) : _point + point;
+        breadpointbar.AddBreadPoint(point);
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHP -= damage;
+        UpdateHPBar();
+        print($"플레이어의 hp피는 {currentHP}입니다.");
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[4]);
+
+        if(hp <= 0)
+        {
+            isDie = true;
+            anim.SetBool("Die", isDie);
+        }
+    }
+
+    public void UpdateHPBar()
+    {
+        float fillAmount = (float)currentHP / hp;
+        hpFillImage.fillAmount = fillAmount;
+        Debug.Log(fillAmount);
     }
 }

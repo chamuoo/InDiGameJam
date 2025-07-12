@@ -21,6 +21,8 @@ public class Inventory : MonoBehaviour
     public int keyNum { get; private set; } = 0;// 인벤토리에서 클릭한 숫자 값
     [SerializeField] Image Icon;
 
+    public bool isChallenge { get; private set; }
+
     private void Start()
     {
         Icon = GetComponent<Image>();
@@ -31,33 +33,36 @@ public class Inventory : MonoBehaviour
 
     void Update()
     {
-        if(Keyboard.current.digit1Key.wasPressedThisFrame) { keyNum = 0; UpdateIcon(); }
-        else if(Keyboard.current.digit2Key.wasPressedThisFrame) { keyNum = 1; UpdateIcon(); }
-        else if(Keyboard.current.digit3Key.wasPressedThisFrame) { keyNum = 2; UpdateIcon(); }
-        else if(Keyboard.current.digit4Key.wasPressedThisFrame) { keyNum = 3; UpdateIcon(); }
-        else if(Keyboard.current.digit5Key.wasPressedThisFrame) { keyNum = 4; UpdateIcon(); }
+        if(Keyboard.current.digit1Key.wasPressedThisFrame) { keyNum = 1; UpdateIcon(); }
+        else if(Keyboard.current.digit2Key.wasPressedThisFrame) { keyNum = 2; UpdateIcon(); }
+        else if(Keyboard.current.digit3Key.wasPressedThisFrame) { keyNum = 3; UpdateIcon(); }
+        else if(Keyboard.current.digit4Key.wasPressedThisFrame) { keyNum = 4; UpdateIcon(); }
+        else if(Keyboard.current.digit5Key.wasPressedThisFrame) { keyNum = 5; UpdateIcon(); }
+        else if(Keyboard.current.digit5Key.wasPressedThisFrame && isChallenge) { keyNum = 5; return; }
 
         if(Keyboard.current.qKey.wasPressedThisFrame)
         {
-            keyNum = (keyNum - 1 + sprites.Length) % sprites.Length;
+            keyNum = (keyNum - 2 + sprites.Length) % sprites.Length + 1;
             UpdateIcon();
         }
         else if(Keyboard.current.eKey.wasPressedThisFrame)
         {
-            keyNum = (keyNum + 1) % sprites.Length;
+            keyNum = (keyNum % sprites.Length) + 1;
             UpdateIcon();
         }
     }
 
     void UpdateIcon()
     {
-        if(keyNum >= 0 && keyNum < sprites.Length)
-            Icon.sprite = sprites[keyNum];
+        int index = keyNum - 1;
+
+        if(index >= 0 && index < sprites.Length)
+            Icon.sprite = sprites[index];
     }
 
     public int AddCount(int count, int KeyNum)
     {
-        switch(KeyNum + 1)
+        switch(KeyNum)
         {
             case 1: return wallCount.normalCount += count;
             case 2: return wallCount.strongCount += count;
@@ -70,7 +75,7 @@ public class Inventory : MonoBehaviour
 
     public int RemoveCount(int count, int KeyNum)
     {
-        switch(KeyNum + 1)
+        switch(KeyNum)
         {
             case 1: return wallCount.normalCount -= count;
             case 2: return wallCount.strongCount -= count;

@@ -174,7 +174,7 @@ public class Enemy1 : MonoBehaviour
 
             if (takeDamageTimer > 0)
             {
-                spriteRenderer.color = new Color(0.8f, 0f, 0f, 0f);
+                spriteRenderer.color = new Color(0.8f, 0f, 0f, 1f);
                 takeDamageTimer -= Time.deltaTime;
             }
             else if (spriteRenderer.color != originalColor)
@@ -184,14 +184,24 @@ public class Enemy1 : MonoBehaviour
         }
         else
         {
-            if(!isDie)
+            if (!isDie)
             {
                 isDie = true;
+
+                Stop();
+                spriteRenderer.color = originalColor;
                 //소리 재생 함수 필요
+
                 animator.SetBool("Die", true);
+                BoxCollider2D[] colliders = GetComponents<BoxCollider2D>();
+                foreach(BoxCollider2D col in colliders)
+                {
+                    col.enabled = false;
+                }
 
                 SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[8]);
-                expbar.AddExp(1);
+                //expbar.AddExp(1);
+                LevelManager.Instance.AddExp(1);
             }    
             if(dieTimer > 0)
             {
@@ -199,6 +209,7 @@ public class Enemy1 : MonoBehaviour
             }
             else
             {
+                LevelManager.Instance.EnemyDie(this.gameObject);
                 Destroy(this.gameObject);
             }
         }

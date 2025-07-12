@@ -8,6 +8,7 @@ public class Pause : MonoBehaviour
 {
     // 일시정지
     [SerializeField] private GameObject PausePanel;
+    [SerializeField] private GameObject DiePanel;
     public bool isPaused = false;
 
     // Start is called before the first frame update
@@ -45,6 +46,7 @@ public class Pause : MonoBehaviour
     {
         Time.timeScale = 1f; // 게임 재개
         PausePanel.SetActive(false); // UI 숨김
+        DiePanel.SetActive(false);
         SceneManager.LoadScene("Menu");
         SceneLoadManager.Instance.MainMenuCanvas.SetActive(true);
     }

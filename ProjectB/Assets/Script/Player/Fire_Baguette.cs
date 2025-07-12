@@ -10,7 +10,8 @@ public class Fire_Baguette : MonoBehaviour
     Rigidbody2D rb;
     [SerializeField] SpriteRenderer spriteRenderer;
     public float timer = 1f;
-    public int damage = 10;
+    public int damage = 3;
+    List<GameObject> hitObjects = new List<GameObject>();
 
     public void SetDirection()
     {
@@ -44,32 +45,21 @@ public class Fire_Baguette : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Enemy"))
+        if (!hitObjects.Contains(collision.gameObject))
         {
-            if (collision.GetComponent<Enemy1>() != null)
-                collision.GetComponent<Enemy1>().TakeDamage(damage);
-            else if (collision.GetComponent<Enemy2>() != null)
-                collision.GetComponent<Enemy2>().TakeDamage(damage);
-            //투사체가 폭발하는 이펙트가 있다면 생성
-            GameObject explosionEffect = Resources.Load<GameObject>("Explore/MiniExploreAnim");
+            hitObjects.Add(collision.gameObject);
 
-            if(explosionEffect != null)
+            if (collision.CompareTag("Enemy"))
             {
-                GameObject spawnedEffect = Instantiate(explosionEffect, transform.position, Quaternion.identity);
-                Destroy(spawnedEffect, 1f);
+                if (collision.GetComponent<Enemy1>() != null)
+                    collision.GetComponent<Enemy1>().TakeDamage(damage);
+                else if (collision.GetComponent<Enemy2>() != null)
+                    collision.GetComponent<Enemy2>().TakeDamage(damage);
             }
-        }
-        else if (collision.CompareTag("Wall"))
-        {
-            //벽이 대미지를 입는 함수 호출
-            collision.GetComponent<Wall>().TakeDamage(damage);
-            //투사체가 폭발하는 이펙트가 있다면 생성
-        }
-        else if (collision.CompareTag("AggroWall"))
-        {
-            //벽이 대미지를 입는 함수 호출
-            collision.GetComponent<Wall>().TakeDamage(damage);
-            //투사체가 폭발하는 이펙트가 있다면 생성
+            else if (collision.CompareTag("Wall") || collision.CompareTag("ChallengeWall"))
+            {
+                collision.GetComponent<Wall>().TakeDamage(damage);
+            }
         }
     }
 }

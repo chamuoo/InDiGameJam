@@ -11,6 +11,7 @@ public class Fire_Hardtack : MonoBehaviour
     [SerializeField] SpriteRenderer spriteRenderer;
     public float timer = 1f;
     public int damage = 3;
+    bool isHit = false;
     public void SetDirection()
     {
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
@@ -48,58 +49,47 @@ public class Fire_Hardtack : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Enemy"))
+        if (!isHit)
         {
-            if (collision.GetComponent<Enemy1>() != null)
-                collision.GetComponent<Enemy1>().TakeDamage(damage);
-            else if (collision.GetComponent<Enemy2>() != null)
-                collision.GetComponent<Enemy2>().TakeDamage(damage);
-            //투사체가 폭발하는 이펙트가 있다면 생성
-            Destroy(this.gameObject);
-        }
-        else if (collision.CompareTag("Wall"))
-        {
-            //벽이 대미지를 입는 함수 호출
-            collision.GetComponent<Wall>().TakeDamage(damage);
-            //투사체가 폭발하는 이펙트가 있다면 생성
-            GameObject explosionEffect = Resources.Load<GameObject>("Explore/MiniExploreAnim");
-
-            if(explosionEffect != null)
+            if (collision.CompareTag("Enemy"))
             {
-                GameObject spawnedEffect = Instantiate(explosionEffect, transform.position, Quaternion.identity);
-                Destroy(spawnedEffect, 1f);
+                isHit = true;
+                if (collision.GetComponent<Enemy1>() != null)
+                    collision.GetComponent<Enemy1>().TakeDamage(damage);
+                else if (collision.GetComponent<Enemy2>() != null)
+                    collision.GetComponent<Enemy2>().TakeDamage(damage);
+                //투사체가 폭발하는 이펙트가 있다면 생성
+                Destroy(this.gameObject);
             }
-            Destroy(this.gameObject);
-        }
-        else if (collision.CompareTag("ChallengeWall"))
-        {
-            //벽이 대미지를 입는 함수 호출
-            collision.GetComponent<Wall>().TakeDamage(damage);
-            //투사체가 폭발하는 이펙트가 있다면 생성
-            GameObject explosionEffect = Resources.Load<GameObject>("Explore/MiniExploreAnim");
-
-            if(explosionEffect != null)
+            else if (collision.CompareTag("Wall") || collision.CompareTag("ChallengeWall"))
             {
-                GameObject spawnedEffect = Instantiate(explosionEffect, transform.position, Quaternion.identity);
-                Destroy(spawnedEffect, 1f);
+                isHit = true;
+                collision.GetComponent<Wall>().TakeDamage(damage);
+                Destroy(this.gameObject);
             }
         }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.CompareTag("Enemy"))
+        if (!isHit)
         {
-            //적이 대미지를 입는 함수 호출
-            //투사체가 폭발하는 이펙트가 있다면 생성
-            Destroy(this.gameObject);
-        }
-        else if (collision.CompareTag("Wall"))
-        {
-            //벽이 대미지를 입는 함수 호출
-            collision.GetComponent<Wall>().TakeDamage(damage);
-            //투사체가 폭발하는 이펙트가 있다면 생성
-            Destroy(this.gameObject);
+            if (collision.CompareTag("Enemy"))
+            {
+                isHit = true;
+                if (collision.GetComponent<Enemy1>() != null)
+                    collision.GetComponent<Enemy1>().TakeDamage(damage);
+                else if (collision.GetComponent<Enemy2>() != null)
+                    collision.GetComponent<Enemy2>().TakeDamage(damage);
+                //투사체가 폭발하는 이펙트가 있다면 생성
+                Destroy(this.gameObject);
+            }
+            else if (collision.CompareTag("Wall") || collision.CompareTag("ChallengeWall"))
+            {
+                isHit = true;
+                collision.GetComponent<Wall>().TakeDamage(damage);
+                Destroy(this.gameObject);
+            }
         }
     }
 }

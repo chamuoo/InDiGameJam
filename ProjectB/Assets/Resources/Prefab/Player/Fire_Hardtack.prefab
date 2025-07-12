@@ -94,9 +94,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6a64024b24a40a45815609e1c751b28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetDirection: {x: 0, y: 0}
   spriteRenderer: {fileID: 6675331249469833475}
   timer: 1
-  damage: 10
+  damage: 3
 --- !u!1 &7696913830973795075
 GameObject:
   m_ObjectHideFlags: 0
@@ -167,8 +168,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1286030755
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 0fdcd90213679c2439d2e16527fa69ce, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

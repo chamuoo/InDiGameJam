@@ -27,12 +27,24 @@ public class ExpBar : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //테스트용
         if (Input.GetKeyDown(KeyCode.K))
         {
             AddExp(1);
         }
+
     }
 
+    public void RefreshExpUI()
+    {
+        currentExp = LevelManager.Instance.exp;
+        level = LevelManager.Instance.level;
+        maxExp = LevelManager.Instance.maxExp;
+        ExpSlider.maxValue = maxExp;
+        ExpSlider.value = currentExp;
+        LvText.text = "레벨 : " + level.ToString();
+        ExpText.text = currentExp.ToString() + " / " + maxExp.ToString();
+    }
     public void AddExp(int ExpPoint)
     {
         currentExp += ExpPoint;
