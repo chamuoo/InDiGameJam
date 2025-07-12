@@ -4,14 +4,6 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using System.Reflection;
 
-public struct GunIcon
-{
-    [SerializeField] Image pirtol;
-    [SerializeField] Image UZI;
-    [SerializeField] Image RailGun;
-    [SerializeField] Image RocketRuncher;
-}
-
 public struct WallCount
 {
     public int normalCount;
