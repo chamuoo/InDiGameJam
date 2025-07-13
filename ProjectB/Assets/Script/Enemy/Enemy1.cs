@@ -27,6 +27,8 @@ public class Enemy1 : MonoBehaviour
     float attackCooldown = 2f;
     bool canAttack = false;
     bool isAttack = false;
+    float blockAttackCooldown = 2f;
+    HashSet<GameObject> damagedBlock = new HashSet<GameObject>();
 
     public int HP = 10;
     float takeDamageTimer = 0f;
@@ -86,6 +88,11 @@ public class Enemy1 : MonoBehaviour
 
             if (attackCooldown > 0)
                 attackCooldown -= Time.deltaTime;
+
+            if (blockAttackCooldown > 0)
+                blockAttackCooldown -= Time.deltaTime;
+            else if (blockAttackCooldown <= 0 && damagedBlock.Count > 0)
+                damagedBlock.Clear();
 
             if (targetObject != null && canAttack && isAttack && attackCooldown <= 0)
             {
@@ -151,7 +158,13 @@ public class Enemy1 : MonoBehaviour
                 Stop();
             }
 
-            if(isBlocked == false)
+            int wallLayer = LayerMask.GetMask("Wall");
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, targetDirection, 0.32f, wallLayer);
+            Debug.DrawRay(transform.position, targetDirection * 1.6f, Color.red);
+            if (isBlocked && (hit.collider == null || !hit.collider.CompareTag("Wall")))
+                isBlocked = false;
+
+            if (isBlocked == false)
             {
                 if (Mathf.Abs(targetDirection.x) > 0.01f)
                 {
@@ -241,6 +254,21 @@ public class Enemy1 : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if(isBlocked && isAttack)
+        {
+            if(!damagedBlock.Contains(collision.gameObject) && collision.CompareTag("Wall"))
+            {
+                if (blockAttackCooldown <= 0)
+                    blockAttackCooldown = 2f;
+                damagedBlock.Add(collision.gameObject);
+                Wall wallScript = collision.gameObject.GetComponent<Wall>();
+                if (wallScript != null)
+                    wallScript.TakeDamage(attackDamage);
+            }
+        }
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {

@@ -16,6 +16,7 @@ public class WeaponIcon : MonoBehaviour
     public float maxValue = 10f;
 
     private int currentIndex = 0;
+    private int nowIndex = 0;
     private int previousIconIndex = -1;
 
     private float lastScrollTime = 0f;
@@ -36,10 +37,32 @@ public class WeaponIcon : MonoBehaviour
 
         if(Mathf.Abs(scrollDelta) > 0.01f)
         {
-            if(scrollDelta > 0f)
-                currentIndex = (currentIndex + 1) % weaponSprites.Count;
-            else if(scrollDelta < 0f)
+            if (scrollDelta > 0f)
+            {
+                nowIndex = (currentIndex + 1) % weaponSprites.Count;
+                if (nowIndex >= 3 && LevelManager.Instance.level < 13)
+                    nowIndex = nowIndex % 3;
+                else if (nowIndex >= 2 && LevelManager.Instance.level < 6)
+                    nowIndex = nowIndex % 2;
+                else if (nowIndex >= 1 && LevelManager.Instance.level < 2)
+                    nowIndex = nowIndex % 1;
+
+                currentIndex = nowIndex;
+            }
+            else if (scrollDelta < 0f)
+            {
+
                 currentIndex = (currentIndex - 1 + weaponSprites.Count) % weaponSprites.Count;
+
+                if (nowIndex >= 3 && LevelManager.Instance.level < 13)
+                    nowIndex = nowIndex % 3;
+                else if (nowIndex >= 2 && LevelManager.Instance.level < 6)
+                    nowIndex = nowIndex % 2;
+                else if (nowIndex >= 1 && LevelManager.Instance.level < 2)
+                    nowIndex = nowIndex % 1;
+
+                currentIndex = nowIndex;
+            }
         }
 
         UpdateIconSprite();

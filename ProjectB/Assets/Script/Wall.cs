@@ -185,7 +185,7 @@ public class Wall : MonoBehaviour
             if(explosionEffect != null)
             {
                 GameObject spawnedEffect = Instantiate(explosionEffect, transform.position, Quaternion.identity);
-                Destroy(spawnedEffect, 1f);
+                spawnedEffect.AddComponent<EffectAutoDestroy>();
             }
         }
 

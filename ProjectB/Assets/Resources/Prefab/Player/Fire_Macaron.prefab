@@ -73,7 +73,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1286030755
+  m_SortingLayerID: -1330527919
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: bb4d5d1cfa302ba48a133add409304f4, type: 3}
@@ -84,7 +84,7 @@ SpriteRenderer:
   m_Size: {x: 0.3, y: 0.26}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!61 &3331477337368467846
@@ -148,7 +148,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   macaron_Boom: {fileID: 1252468205929116426, guid: 20fd9143391cc1440a4e09c2c138b211, type: 3}
   macaronSprites:
-  - {fileID: 21300000, guid: bb4d5d1cfa302ba48a133add409304f4, type: 3}
+  - {fileID: 21300000, guid: 114c902a5ad57be4ba852faebfe67c01, type: 3}
   - {fileID: 21300000, guid: ef1cc30755d147d4fb535e44f7fa6b79, type: 3}
   - {fileID: 21300000, guid: 25d6b5148e64d0340a52dadac379d366, type: 3}
   damage: 3

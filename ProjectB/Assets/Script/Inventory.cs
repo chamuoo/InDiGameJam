@@ -33,12 +33,30 @@ public class Inventory : MonoBehaviour
 
     void Update()
     {
-        if(Keyboard.current.digit1Key.wasPressedThisFrame) { keyNum = 1; UpdateIcon(); }
-        else if(Keyboard.current.digit2Key.wasPressedThisFrame) { keyNum = 2; UpdateIcon(); }
-        else if(Keyboard.current.digit3Key.wasPressedThisFrame) { keyNum = 3; UpdateIcon(); }
-        else if(Keyboard.current.digit4Key.wasPressedThisFrame) { keyNum = 4; UpdateIcon(); }
-        else if(Keyboard.current.digit5Key.wasPressedThisFrame) { keyNum = 5; UpdateIcon(); }
-        else if(Keyboard.current.digit5Key.wasPressedThisFrame && isChallenge) { keyNum = 5; return; }
+        if(Keyboard.current.digit1Key.wasPressedThisFrame) { 
+            keyNum = 1; UpdateIcon(); 
+        }
+        else if(Keyboard.current.digit2Key.wasPressedThisFrame) { 
+            if(LevelManager.Instance.level >= 3)
+                keyNum = 2; UpdateIcon(); 
+        }
+        else if(Keyboard.current.digit3Key.wasPressedThisFrame) {
+            //if(LevelManager.Instance.level >= 8)
+                keyNum = 3; UpdateIcon();
+        }
+        else if(Keyboard.current.digit4Key.wasPressedThisFrame) {
+            keyNum = 4; UpdateIcon();
+            //if(LevelManager.Instance.level >= 11)
+
+        }
+        else if(Keyboard.current.digit5Key.wasPressedThisFrame) {
+            if(LevelManager.Instance.level >= 15)
+                keyNum = 5; UpdateIcon(); 
+        }
+        else if(Keyboard.current.digit5Key.wasPressedThisFrame && isChallenge) { 
+            keyNum = 5; 
+            return; 
+        }
 
         if(Keyboard.current.qKey.wasPressedThisFrame)
         {
