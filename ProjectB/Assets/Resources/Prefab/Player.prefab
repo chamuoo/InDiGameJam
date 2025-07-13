@@ -149,8 +149,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1156263263
+  m_SortingLayer: 1
   m_SortingOrder: 1
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -239,7 +239,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: -798662073
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &5160836413598753100
@@ -468,8 +468,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1156263263
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: -1159195975, guid: 5166ea343d3da734b822c15edf36999e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -520,6 +520,7 @@ MonoBehaviour:
   _point: 100
   hpFillImage: {fileID: 3540780553799857743}
   currentHP: 10
+  rigidbody: {fileID: 0}
   footstepAudioSourse01: {fileID: 5949832606563600864}
   footstepAudioSourse02: {fileID: 8035154995044069216}
 --- !u!114 &5472949163546554288

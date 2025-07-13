@@ -51,7 +51,22 @@ public class SceneLoadManager : MonoBehaviour
     public void GoInGame()
     {
         SceneManager.LoadScene("Test1");
+        
+        //SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[0]);
+    }
+    public void GoStory()
+    {
+        SceneManager.LoadScene("Story");
         MainMenuCanvas.SetActive(false);
         SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[0]);
+    }
+    public void GoMenu()
+    {
+        SceneManager.LoadScene("Menu");
+        MainMenuCanvas.SetActive(true);
+    }
+    public void GoEnding()
+    {
+        SceneManager.LoadScene("Ending");
     }
 }

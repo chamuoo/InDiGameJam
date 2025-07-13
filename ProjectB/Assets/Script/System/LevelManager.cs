@@ -33,6 +33,7 @@ public class LevelManager : MonoBehaviour
     float total_WaveTime = 120f;
     public TextMeshProUGUI WaveText;
     public TextMeshProUGUI WatingText;
+    public GameObject WatingBox;
 
     [SerializeField] private GameObject DiePanel;
 
@@ -75,6 +76,11 @@ public class LevelManager : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            SceneLoadManager.Instance.GoEnding();
+        }
+
         if(isGameStart)
         {
             if (!isWave) //정비 시간일 때
@@ -88,6 +94,7 @@ public class LevelManager : MonoBehaviour
                     notWaveTimer -= Time.deltaTime;
 
                     WatingText.text = "정비 시간";
+                    WatingBox.SetActive(true);
 
                     int minutes = Mathf.FloorToInt(notWaveTimer / 60f);
                     int seconds = Mathf.FloorToInt(notWaveTimer % 60f);
@@ -114,6 +121,7 @@ public class LevelManager : MonoBehaviour
                     waveTimer = total_WaveTime;
 
                     WatingText.text = "";
+                    WatingBox.SetActive(false);
                     WaveText.text = "WAVE " + wave;
                     Invoke("invokeWaveTextshow", 2f);
                 }
@@ -280,6 +288,11 @@ public class LevelManager : MonoBehaviour
                         playerScript.ApeendWallPoint(10);
                         playerScript.currentHP = 10;
                         playerScript.UpdateHPBar();
+
+                        if(wave == 20)
+                        {
+                            SceneLoadManager.Instance.GoEnding();
+                        }
                     }
 
                 }

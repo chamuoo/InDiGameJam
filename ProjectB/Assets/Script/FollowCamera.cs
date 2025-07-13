@@ -36,8 +36,8 @@ public class FollowCamera : MonoBehaviour
         Vector3 currentPos = transform.position;
 
         // X/Y 제한 범위: 일정 영역(예: 화면 중심 기준 X: ±1.5, Y: ±0.8)
-        bool isInsideX = target.position.x > 1.75f || target.position.x < -1.75f;
-        bool isInsideY = target.position.y > 0.6f || target.position.y < -0.6f;
+        bool isInsideX = target.position.x > 1.9f || target.position.x < -1.9f;
+        bool isInsideY = target.position.y > 0.9f || target.position.y < -0.9f;
 
         float newX = currentPos.x;
         float newY = currentPos.y;

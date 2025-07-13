@@ -46,3 +46,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Characters
+    uniqueID: 3138704033
+    locked: 0
+  - name: InGameUI
+    uniqueID: 3496305223
+    locked: 0
+  - name: UI
+    uniqueID: 3277938727
+    locked: 0
