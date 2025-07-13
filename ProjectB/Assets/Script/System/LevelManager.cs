@@ -37,6 +37,9 @@ public class LevelManager : MonoBehaviour
 
     [SerializeField] private GameObject DiePanel;
 
+    public TextMeshProUGUI systemText;
+    public GameObject skipButton;
+
     private void Awake()
     {
         if(Instance != null && Instance != this)
@@ -57,6 +60,7 @@ public class LevelManager : MonoBehaviour
         wave = 0;
         isWave = false;
         WaveText.text = "";
+        systemText.text = "";
 
         for (int i = enemys.Count - 1; i >= 0; i--)
         {
@@ -289,6 +293,8 @@ public class LevelManager : MonoBehaviour
                         playerScript.currentHP = 10;
                         playerScript.UpdateHPBar();
 
+                        skipButton.SetActive(true);
+
                         if(wave == 20)
                         {
                             SceneLoadManager.Instance.GoEnding();
@@ -318,6 +324,12 @@ public class LevelManager : MonoBehaviour
         WaveText.text = "";
     }
 
+    public void skipToGoWave()
+    {
+        notWaveTimer = 0.1f;
+        skipButton.SetActive(false);
+    }
+
     public void EnemyDie(GameObject obj)
     {
         if(enemys.Contains(obj))
@@ -336,6 +348,8 @@ public class LevelManager : MonoBehaviour
             level += 1;
             LevelUp(level);
             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[11]);
+
+            
         }
 
         if (expBar != null)
@@ -346,6 +360,11 @@ public class LevelManager : MonoBehaviour
         {
             print("레벨매니저에서 expBar를 찾지 못했음.");
         }
+    }
+
+    void deleteSystemText()
+    {
+        systemText.text = "";
     }
 
     public void LevelUp(int newLevel)
@@ -359,10 +378,14 @@ public class LevelManager : MonoBehaviour
             if (level < 2 && newLevel >= 2)
             {
                 //2렙 효과
+                systemText.text = "레벨업! 별사탕 무기를 사용할 수 있습니다!";
+                Invoke("deleteSystemText", 3f);
             }
             if (level < 3 && newLevel >= 3)
             {
                 //3렙 효과
+                systemText.text = "레벨업! 단단한 식빵을 사용할 수 있습니다!";
+                Invoke("deleteSystemText", 3f);
             }
             if (level < 4 && newLevel >= 4)
             {
@@ -375,6 +398,8 @@ public class LevelManager : MonoBehaviour
             if (level < 6 && newLevel >= 6)
             {
                 //6렙 효과
+                systemText.text = "레벨업! 바게트 무기를 사용할 수 있습니다!";
+                Invoke("deleteSystemText", 3f);
             }
             if (level < 7 && newLevel >= 7)
             {
@@ -383,6 +408,8 @@ public class LevelManager : MonoBehaviour
             if (level < 8 && newLevel >= 8)
             {
                 //8렙 효과
+                systemText.text = "레벨업! 타버린 식빵을 사용할 수 있습니다!";
+                Invoke("deleteSystemText", 3f);
             }
             if (level < 9 && newLevel >= 9)
             {
@@ -395,6 +422,8 @@ public class LevelManager : MonoBehaviour
             if (level < 11 && newLevel >= 11)
             {
                 //11렙 효과
+                systemText.text = "레벨업! 건포도 식빵을 사용할 수 있습니다!";
+                Invoke("deleteSystemText", 3f);
             }
             if (level < 12 && newLevel >= 12)
             {
@@ -403,6 +432,8 @@ public class LevelManager : MonoBehaviour
             if (level < 13 && newLevel >= 13)
             {
                 //13렙 효과
+                systemText.text = "레벨업! 마카롱 무기를 사용할 수 있습니다!";
+                Invoke("deleteSystemText", 3f);
             }
             if (level < 14 && newLevel >= 14)
             {
@@ -411,6 +442,8 @@ public class LevelManager : MonoBehaviour
             if (level < 15 && newLevel >= 15)
             {
                 //15렙 효과
+                systemText.text = "레벨업! 위험한 식빵을 사용할 수 있습니다!";
+                Invoke("deleteSystemText", 3f);
             }
             if (level < 16 && newLevel >= 16)
             {

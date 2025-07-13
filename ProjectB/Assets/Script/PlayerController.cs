@@ -52,6 +52,8 @@ public class PlayerController : MonoBehaviour
     public AudioSource footstepAudioSourse02;
     private bool switchStepSound = false;
 
+    [SerializeField] private GameObject DiePanel;
+
     private void OnEnable()
     {
         playerInput = GetComponent<PlayerInput>();
@@ -185,6 +187,7 @@ public class PlayerController : MonoBehaviour
         {
             Vector3 localScale = transform.localScale;
             localScale.x = moveInput.x > 0 ? Mathf.Abs(localScale.x) : -Mathf.Abs(localScale.x);
+            //hpFillImage.rectTransform.localScale.x = moveInput.x > 0 ? Mathf.Abs(localScale.x) : -Mathf.Abs(localScale.x);
             transform.localScale = localScale;
         }
 
@@ -267,10 +270,12 @@ public class PlayerController : MonoBehaviour
         print($"플레이어의 hp피는 {currentHP}입니다.");
         SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[4]);
 
-        if(hp <= 0)
+        if(currentHP <= 0)
         {
             isDie = true;
             anim.SetBool("Die", isDie);
+            Time.timeScale = 0f;
+            DiePanel.SetActive(true);
         }
     }
 
